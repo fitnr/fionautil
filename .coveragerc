@@ -1,0 +1,22 @@
+# This file is part of fionautil.
+# http://github.com/fitnr/fionautil
+
+# Licensed under the GPLv3 license:
+# http://www.opensource.org/licenses/GPLv3-license
+# Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
+
+[run]
+omit =
+    *tests.py
+branch = True
+source =
+    fionautil
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    from urllib.parse import parse_qs
+    except ImportError:
