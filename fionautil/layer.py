@@ -30,3 +30,7 @@ def fchain(*filenames):
             with fiona.open(filename, "r") as layer:
                 for feature in layer:
                     yield feature
+
+def find(filename, key, value):
+    '''Special case of ffilter: return the first feature where key==value'''
+    return ffilter(lambda f: f['properties'][key] == value, filename).pop()
