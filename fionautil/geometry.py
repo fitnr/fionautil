@@ -12,17 +12,17 @@ def _transform_multi(in_proj, out_proj, coordinates):
 
 
 def explode(geometry):
-    '''A generator that returns the start and end coordinates of every segment of a set of coordinates'''
+    '''A generator that returns every coordinate of every segment of a geometry'''
     if len(geometry['coordinates']) > 1:
-        chained_coords = chain(*geometry['coordinates'])
+        geomchain = chain(*geometry['coordinates'])
     else:
-        chained_coords = chain(geometry['coordinates'])
+        geomchain = geometry['coordinates']
 
     # polygon is a list of tuples:
     # [(7.08545983, 53.686), (6.873789, 53.672), (6.9108, 53.683), (7.04704, 53.694), (7.085, 53.68699)]
-    for polygon in chained_coords:
-        for x in range(len(polygon)):
-            yield tuple(math.radians(w) for w in polygon[x - 1] + polygon[x])
+    for polygon in geomchain:
+        for point in polygon:
+            yield point
 
 
 def reproject(in_proj, out_proj, geometry):
