@@ -1,25 +1,32 @@
+import itertools
 import fiona
 
-def filter(filename, test):
+
+def ffilter(func, filename):
     with fiona.drivers():
         with fiona.open(filename, "r") as layer:
-            for feature in layer:
-                if test(feature):
-                    yield feature
+            return itertools.ifilter(func, layer)
 
 
-def mutate(filename, func):
+def fmap(filename, func):
     '''Add properties to a fiona layer as its read.
     prop_func takes the feature as an argument and should return it with edited properties/geometry'''
     with fiona.drivers():
         with fiona.open(filename, "r") as layer:
-            for feature in layer:
-                yield func(feature)
+            return itertools.imap(func, layer)
 
-def find(filename, field, value):
+
+def freduce(filename, func, initializer=None):
+    '''Reduce features of a layer to a single value'''
     with fiona.drivers():
-        with fiona.open(filename, "r") as source:
-            for f in source:
-                if f['properties'][field] == value:
-                    return f
-    raise KeyError('value not found for field: {}: {}'.format(field, value))
+        with fiona.open(filename, "r") as layer:
+            return reduce(func, layer, initializer)
+
+
+def fchain(*filenames):
+    '''Reduce features of a layer to a single value'''
+    for filename in itertools.chain(filenames):
+        with fiona.drivers():
+            with fiona.open(filename, "r") as layer:
+                for feature in layer:
+                    yield feature
