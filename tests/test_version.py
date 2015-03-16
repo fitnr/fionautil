@@ -8,12 +8,11 @@
 # http://www.opensource.org/licenses/GPLv3-license
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
-from preggy import expect
-
 from fionautil import __version__
 from tests.base import TestCase
 
 
 class VersionTestCase(TestCase):
     def test_has_proper_version(self):
-        expect(__version__).to_equal('0.1.0')
+        assert __version__ == '0.1.0'
+
