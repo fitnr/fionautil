@@ -82,7 +82,7 @@ def explodesegments(geometry):
     '''A generator that returns every line segment of every polygon in a geometry'''
     for ring in geometry['coordinates']:
         for i, point in enumerate(ring[:-1]):
-            yield point, ring[i]
+            yield point, ring[i + 1]
 
 
 def reproject(in_proj, out_proj, geometry):
