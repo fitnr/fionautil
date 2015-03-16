@@ -9,7 +9,7 @@ def distance(x0, y0, x1, y1):
 
 def azimuth(x0, y0, x1, y1, radians=True, **kwargs):
     '''azimuth between 2 geographic points'''
-    if kwargs['projected']:
+    if kwargs.get('projected'):
         if y0 == y1:
             if x0 == x1:
                 az = 0
