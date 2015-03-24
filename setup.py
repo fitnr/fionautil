@@ -33,7 +33,7 @@ setup(
     include_package_data=False,
     install_requires=[
         'pyproj>=1.9.3,<1.10',
-        'fiona>=1.4.7,<1.5',
+        'fiona>=1.5.0,<2.0',
     ],
 
     test_suite='tests',
