@@ -1,8 +1,6 @@
 from itertools import chain
-import math
 import pyproj
-
-from . import measure, rotation
+from . import measure
 
 
 def endpoints(geometry):
@@ -28,37 +26,24 @@ def endpoint(feature):
     return end
 
 
-def azimuth(geometry, projection, radians=None):
-    '''return the azimuth of a fiona LineString given a feature and a Proj instance'''
+def azimuth(geometry, projection=None, radians=False, clockwise=False, cartesian=True):
+    '''return the azimuth of a fiona LineString given a feature and a Proj instance (or note that it's cartesian-ish'''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
         raise ValueError("This only works with PolyLine layers, this is: {}".format(geometry['type']))
 
     first, last = endpoints(geometry)
 
-    x0, y0 = projection(*first, inverse=True)
-    x1, y1 = projection(*last, inverse=True)
-
-    return measure.azimuth(x0, y0, x1, y1, radians=radians)
-
-
-def rotate(geometry, angle=None, projected=None):
-    '''rotate line feature. by default, endpoint will lie directly below start'''
-    angle = angle or math.pi
-
-    if geometry['type'] == 'LineString':
-        newcoords = rotation.linestring(geometry['coordinates'], angle, projected=projected)
-
-    elif geometry['type'] == 'MultiLineString':
-        base = geometry['coordinates'][0][0]
-        newcoords = [rotation.linestring(line, angle, base, projected=projected) for line in geometry['coordinates']]
+    if cartesian:
+        x0, y0 = first
+        x1, y1 = last
 
     else:
-        raise ValueError("Didn't recognize geometry type {}. {}".format(geometry['type'], geometry))
+        x0, y0 = projection(*first, inverse=True)
+        x1, y1 = projection(*last, inverse=True)
 
-    geometry['coordinates'] = newcoords
+    return measure.azimuth(x0, y0, x1, y1, radians=radians, clockwise=clockwise, cartesian=cartesian)
 
-    return geometry
 
 
 def transform_line(in_proj, out_proj, ring):

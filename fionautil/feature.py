@@ -1,4 +1,4 @@
-from shapely.affinity import rotate as shapelyrotate
+import shapely.affinity
 from shapely.geometry import mapping
 from shapely.geometry.linestring import LineString
 from shapely.geometry.multilinestring import MultiLineString
@@ -38,12 +38,12 @@ def geojson_feature(typ, coordinates, properties=None):
         }
     }
 
-def rotate(feature, angle):
+def rotate(feature, angle, **kwargs):
     '''Rotate a feature's geometry and return the result'''
     try:
         shape = GEOMS[feature['geometry']['type']](feature['geometry']['coordinates'])
     except KeyError:
-        raise("Can't rotate geometry of type {}".format(feature['geometry']['type']))
+        raise KeyError("Can't rotate geometry of type {}".format(feature['geometry']['type']))
 
-    feature['geometry'] = mapping(shapelyrotate(shape, angle))
+    feature['geometry'] = mapping(shapely.affinity.rotate(shape, angle, **kwargs))
     return feature
