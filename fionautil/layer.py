@@ -3,6 +3,12 @@ import itertools
 import fiona
 import sys
 
+def meta(filename):
+    '''Return crs and schema for a layer'''
+    with fiona.drivers():
+        with fiona.open(filename, "r") as layer:
+            return layer.crs, layer.schema
+
 
 def fionaiter(iterfunc):
     def _iter(func, filename, *args):
