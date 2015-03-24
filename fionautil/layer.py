@@ -2,12 +2,21 @@ from __future__ import print_function
 import itertools
 import fiona
 import sys
+from fionautil import geometry
+
 
 def meta(filename):
     '''Return crs and schema for a layer'''
     with fiona.drivers():
         with fiona.open(filename, "r") as layer:
             return layer.crs, layer.schema
+
+
+def bbox(filename):
+    with fiona.drivers():
+        with fiona.open(filename, 'r') as layer:
+            ux, uy, mx, my = zip(*[geometry.bbox(feature['geometry']) for feature in layer])
+            return min(ux), min(uy), max(mx), max(my)
 
 
 def fionaiter(iterfunc):

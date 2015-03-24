@@ -16,14 +16,18 @@ def endpoints(geometry):
     raise ValueError("Improper Feature type.")
 
 
-def startpoint(feature):
-    start, _ = endpoints(feature)
+def startpoint(geometry):
+    start, _ = endpoints(geometry)
     return start
 
 
-def endpoint(feature):
-    _, end = endpoints(feature)
+def endpoint(geometry):
+    _, end = endpoints(geometry)
     return end
+
+def bbox(geometry):
+    x, y = zip(*list(explode(geometry['coordinates'])))
+    return min(x), min(y), max(x), max(y)
 
 
 def azimuth(geometry, projection=None, radians=False, clockwise=False, cartesian=True):
