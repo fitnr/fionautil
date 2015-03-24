@@ -12,9 +12,3 @@ from .version import __version__  # NOQA
 
 __all__ = ['convert', 'feature', 'geometry', 'layer', 'measure', 'rotation']
 
-from . import convert
-from . import feature
-from . import geometry
-from . import layer
-from . import measure
-from . import rotation

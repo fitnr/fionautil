@@ -17,7 +17,7 @@ shp = os.path.join(os.path.dirname(__file__), 'fixtures/testing.shp')
 geojson = os.path.join(os.path.dirname(__file__), 'fixtures/testing.geojson')
 
 
-class TestCase(PythonTestCase):
+class TestLayer(PythonTestCase):
 
     def test_ffilter(self):
         test = lambda f: f['properties']['id'] == 3

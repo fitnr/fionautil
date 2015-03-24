@@ -11,18 +11,6 @@
 from setuptools import setup, find_packages
 from fionautil import __version__
 
-tests_require = [
-    'mock',
-    'nose',
-    'coverage',
-    'yanc',
-    'preggy',
-    'tox',
-    'ipdb',
-    'coveralls',
-    'sphinx',
-]
-
 setup(
     name='fionautil',
     version=__version__,
@@ -47,7 +35,11 @@ setup(
         'pyproj>=1.9.3,<1.10',
         'fiona>=1.4.7,<1.5',
     ],
-    extras_require={
-        'tests': tests_require,
-    },
+
+    test_suite='tests',
+
+    tests_require=[
+        'tox'
+    ],
+
 )
