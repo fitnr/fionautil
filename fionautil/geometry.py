@@ -51,11 +51,10 @@ def rotate(geometry, angle=None, projected=None):
 
     elif geometry['type'] == 'MultiLineString':
         base = geometry['coordinates'][0][0]
-        newcoords = []
-        for line in geometry['coordinates']:
-            newcoords.append(rotation.linestring(line, angle, base, projected=projected))
+        newcoords = [rotation.linestring(line, angle, base, projected=projected) for line in geometry['coordinates']]
+
     else:
-        raise ValueError("What? {}".format(geometry))
+        raise ValueError("Didn't recognize geometry type {}. {}".format(geometry['type'], geometry))
 
     geometry['coordinates'] = newcoords
 
