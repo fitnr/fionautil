@@ -1,6 +1,7 @@
 import math
-from .wgs84 import WGS84
+import pyproj
 
+WGS84 = pyproj.Geod(ellps='WGS84')
 
 def distance(x0, y0, x1, y1):
     '''distance (in m) between two (lon, lat) pairs'''
