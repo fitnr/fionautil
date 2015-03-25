@@ -69,7 +69,13 @@ def explode(geometry):
 
 def explodesegments(geometry):
     '''A generator that returns every line segment of every polygon in a geometry'''
-    for ring in geometry['coordinates']:
+
+    if len(geometry['coordinates']) > 1:
+        coords = chain(*geometry['coordinates'])
+    else:
+        coords = geometry['coordinates']
+
+    for ring in coords:
         for i, point in enumerate(ring[:-1]):
             yield point, ring[i + 1]
 
