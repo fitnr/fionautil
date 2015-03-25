@@ -40,7 +40,7 @@ def ffilterfalse(func, layer):
 
 @fionaiter
 def fmap(func, layer):
-    '''Yield properties in a fiona layer, applying func to each'''
+    '''Yield features in a fiona layer, applying func to each'''
     return iter(func(f) for f in layer)
 
 
