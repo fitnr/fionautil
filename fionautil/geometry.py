@@ -30,23 +30,24 @@ def bbox(geometry):
     return min(x), min(y), max(x), max(y)
 
 
-def azimuth(geometry, projection=None, radians=False, clockwise=False, cartesian=True):
+def azimuth(geometry, projection=None, radians=False, clockwise=False):
     '''return the azimuth of a fiona LineString given a feature and a Proj instance (or note that it's cartesian-ish'''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
         raise ValueError("This only works with PolyLine layers, this is: {}".format(geometry['type']))
 
     first, last = endpoints(geometry)
+    latlong = projection.is_latlong()
 
-    if cartesian:
-        x0, y0 = first
-        x1, y1 = last
-
-    else:
+    if latlong:
         x0, y0 = projection(*first, inverse=True)
         x1, y1 = projection(*last, inverse=True)
 
-    return measure.azimuth(x0, y0, x1, y1, radians=radians, clockwise=clockwise, cartesian=cartesian)
+    else:
+        x0, y0 = first
+        x1, y1 = last
+
+    return measure.azimuth(x0, y0, x1, y1, radians=radians, clockwise=clockwise, latlong=latlong)
 
 
 

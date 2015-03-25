@@ -24,13 +24,13 @@ def _projected_azimuth(x0, y0, x1, y1):
     return math.degrees(az)
 
 
-def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, cartesian=None):
+def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, latlong=True):
     '''azimuth between 2 geographic points'''
-    if cartesian:
-        az = _projected_azimuth(x0, y0, x1, y1)
-    else:
+    if latlong:
         # this is always in angles
         az, _, _ = WGS84.inv(x0, y0, x1, y1)
+    else:
+        az = _projected_azimuth(x0, y0, x1, y1)
 
     if radians:
         az = math.radians(az)
