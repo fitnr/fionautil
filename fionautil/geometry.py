@@ -67,8 +67,8 @@ def explode(geometry):
             yield point
 
 
-def explodesegments(geometry):
-    '''A generator that returns every line segment of every polygon in a geometry'''
+def explodelinestring(geometry):
+    '''A generator that returns every line segment of every linestring'''
 
     if len(geometry['coordinates']) > 1:
         coords = chain(*geometry['coordinates'])
