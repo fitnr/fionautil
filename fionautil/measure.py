@@ -3,9 +3,13 @@ import pyproj
 
 WGS84 = pyproj.Geod(ellps='WGS84')
 
-def distance(x0, y0, x1, y1):
-    '''distance (in m) between two (lon, lat) pairs'''
-    _, _, d = WGS84.inv(x0, y0, x1, y1)
+
+def distance(x0, y0, x1, y1, latlong=True):
+    '''distance (in m) between two pairs of points'''
+    if latlong:
+        _, _, d = WGS84.inv(x0, y0, x1, y1)
+    else:
+        d = math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2)
     return d
 
 
