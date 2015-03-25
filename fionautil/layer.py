@@ -18,6 +18,12 @@ def bbox(filename):
             ux, uy, mx, my = zip(*[geometry.bbox(feature['geometry']) for feature in layer])
             return min(ux), min(uy), max(mx), max(my)
 
+def first(filename):
+    '''Return the first feature of a layer'''
+    with fiona.drivers():
+        with fiona.open(filename, 'r') as layer:
+            return next(layer)
+
 
 def fionaiter(iterfunc):
     def _iter(func, filename, *args):
