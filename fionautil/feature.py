@@ -51,6 +51,7 @@ def shapify(feature):
     typ = feature['geometry']['type']
     try:
         if typ == 'MultiPolygon':
+            # TODO is this right?
             coords = [Polygon(x[0]) for x in feature['geometry']['coordinates']]
         else:
             coords = feature['geometry']['coordinates']
