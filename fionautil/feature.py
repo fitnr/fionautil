@@ -1,6 +1,5 @@
-import shapely.affinity
-from shapely.geometry import mapping
-from shapely.geometry.base import BaseGeometry
+from __future__ import print_function
+import sys
 from shapely.geometry.point import Point
 from shapely.geometry.linestring import LineString
 from shapely.geometry.multilinestring import MultiLineString
@@ -15,6 +14,12 @@ GEOMS = {
     'MultiPoint': MultiPoint,
     'MultiPolygon': MultiPolygon,
     'Polygon': Polygon
+}
+
+MULTIS = {
+    'MultiLineString': LineString,
+    'MultiPoint': Point,
+    'MultiPolygon': Polygon
 }
 
 def field_contains_test(field_values):
@@ -41,15 +46,18 @@ def geojson_feature(typ, coordinates, properties=None):
         }
     }
 
-def rotate(feature, angle, **kwargs):
-    '''Rotate a feature's geometry and return the result'''
-    shape = shapify(feature)
-
-    feature['geometry'] = mapping(shapely.affinity.rotate(shape, angle, **kwargs))
-    return feature
 
 def shapify(feature):
+    typ = feature['geometry']['type']
     try:
-        return GEOMS[feature['geometry']['type']](feature['geometry']['coordinates'])
-    except KeyError:
-        return BaseGeometry(feature['geometry']['coordinates'])
+        if typ == 'MultiPolygon':
+            coords = [Polygon(x[0]) for x in feature['geometry']['coordinates']]
+        else:
+            coords = feature['geometry']['coordinates']
+
+    except ValueError as e:
+        print('Error Shapifying', file=sys.stderr)
+        print(feature, file=sys.stderr)
+        raise e
+
+    return GEOMS[typ](coords)
