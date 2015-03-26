@@ -33,7 +33,7 @@ def field_contains_test(field_values):
     return test
 
 
-def geojson_feature(typ, coordinates, properties=None):
+def togeojson(typ, coordinates, properties=None):
     '''Return a GeoJSON-ready object given a properties dict, a type and coordinates.'''
     properties = properties or {}
 
