@@ -12,11 +12,10 @@ def meta(filename):
             return layer.crs, layer.schema
 
 
-def bbox(filename):
+def bounds(filename):
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
-            ux, uy, mx, my = zip(*[geometry.bbox(feature['geometry']) for feature in layer])
-            return min(ux), min(uy), max(mx), max(my)
+            return layer.bounds()
 
 def first(filename):
     '''Return the first feature of a layer'''
