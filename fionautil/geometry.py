@@ -50,6 +50,16 @@ def azimuth(geometry, projection=None, radians=False, clockwise=False):
     return measure.azimuth(x0, y0, x1, y1, radians=radians, clockwise=clockwise, latlong=latlong)
 
 
+def disjointed(shapes):
+    '''Reduce a list of shapely shapes to those that are disjoint from the others'''
+    newshapes = [shapes[0]]
+    for shape in shapes[1:]:
+        for i, other in enumerate(newshapes):
+            if shape.intersects(other):
+                newshapes[i] = other.union(shape)
+                break
+
+    return newshapes
 
 def transform_line(in_proj, out_proj, ring):
     xs, ys = pyproj.transform(in_proj, out_proj, *zip(*ring))  # pylint: disable=W0632

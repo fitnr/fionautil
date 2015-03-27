@@ -2,8 +2,8 @@ from __future__ import print_function
 import itertools
 import fiona
 import sys
-from fionautil import geometry
-
+from .feature import shapify
+from .geometry import disjointed
 
 def meta(filename):
     '''Return crs and schema for a layer'''
@@ -97,3 +97,32 @@ def find(filename, key, value):
     '''Special case of ffilter: return the first feature where key==value'''
     test = lambda f: f['properties'][key] == value
     return next(ffilter(test, filename))
+
+
+def dissolve(sourcefile, sinkfile, key, unsplit=None):
+    with fiona.drivers():
+        with fiona.open(sourcefile) as source:
+            schema = source.schema
+            schema['properties'] = {key: source.schema['properties'][key]}
+
+            with fiona.open(sinkfile, 'w', crs=source.crs, schema=schema, driver=source.driver) as sink:
+
+                gotkeys = dict()
+
+                for _, feat in source.items():
+                    fkey = feat['properties'][key]
+                    fshape = shapify(feat)
+
+                    if fkey in gotkeys:
+                        gotkeys[fkey][0] = gotkeys[fkey][0].union(fshape)
+                    else:
+                        gotkeys[fkey] = [fshape]
+
+                for shapelist in gotkeys.values():
+                    if unsplit:
+                        for s in disjointed(shapelist):
+                            sink.write(s)
+
+                    else:
+                        sink.write(shapelist[0])
+
