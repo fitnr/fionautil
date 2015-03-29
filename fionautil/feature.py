@@ -33,6 +33,18 @@ def field_contains_test(field_values):
     return test
 
 
+def overlaps(feature, bbox):
+    '''Returns true if feature overlaps bbox (xmin, ymin, xmax, ymax)'''
+    xm0, ym0, xM0, yM0 = bbox
+    xm1, ym1, xM1, yM1 = geometry.bbox(feature['geometry'])
+    if yM1 < ym0 or yM0 < ym1:
+        return False
+
+    if xM1 < xm0 or xM0 < xm1:
+        return False
+
+    return True
+
 def togeojson(typ, coordinates, properties=None):
     '''Return a GeoJSON-ready object given a properties dict, a type and coordinates.'''
     properties = properties or {}
