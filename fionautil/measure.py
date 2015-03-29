@@ -41,6 +41,7 @@ def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, latlong=True):
 
     return az * (1 if clockwise else -1)
 
+
 def signed_area(coords):
     """Return the signed area enclosed by a ring using the linear time
     algorithm at http://www.cgafaq.info/wiki/Polygon_Area. A value >= 0
@@ -50,9 +51,10 @@ def signed_area(coords):
     ys.append(ys[1])
     return sum(xs[i] * (ys[i + 1] - ys[i - 1]) for i in range(1, len(coords))) / 2.0
 
+
 def clockwise(coords):
     return signed_area(coords) < 0
 
+
 def counterclockwise(coords):
     return signed_area(coords) >= 0
-

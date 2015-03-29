@@ -1,7 +1,31 @@
+from __future__ import print_function
+import sys
 from itertools import chain
 import pyproj
+from shapely.geometry.point import Point
+from shapely.geometry.linestring import LineString
+from shapely.geometry.multilinestring import MultiLineString
+from shapely.geometry.multipoint import MultiPoint
+from shapely.geometry.multipolygon import MultiPolygon
+from shapely.geometry.polygon import Polygon
 from . import measure
+from .coordinates import transform_multi, transform_line
 
+
+GEOMS = {
+    'Point': Point,
+    'LineString': LineString,
+    'MultiLineString': MultiLineString,
+    'MultiPoint': MultiPoint,
+    'MultiPolygon': MultiPolygon,
+    'Polygon': Polygon
+}
+
+MULTIS = {
+    'MultiLineString': LineString,
+    'MultiPoint': Point,
+    'MultiPolygon': Polygon
+}
 
 def endpoints(geometry):
     '''Return the first and last coordinates of a LineString or Multilinestring'''
@@ -25,8 +49,9 @@ def endpoint(geometry):
     _, end = endpoints(geometry)
     return end
 
+
 def bbox(geometry):
-    x, y = zip(*list(explodepoints(geometry['coordinates'])))
+    x, y = zip(*list(explodepoints(geometry)))
     return min(x), min(y), max(x), max(y)
 
 
@@ -60,14 +85,6 @@ def disjointed(shapes):
                 break
 
     return newshapes
-
-def transform_line(in_proj, out_proj, ring):
-    xs, ys = pyproj.transform(in_proj, out_proj, *zip(*ring))  # pylint: disable=W0632
-    return zip(xs, ys)
-
-
-def transform_multi(in_proj, out_proj, coordinates):
-    return [transform_line(in_proj, out_proj, ring) for ring in coordinates]
 
 
 def explodepoints(geometry):
@@ -121,6 +138,7 @@ def exploderings(geometry):
     else:
         raise ValueError("Unkown geometry type: {}".format(geometry['type']))
 
+
 def reproject(in_proj, out_proj, geometry):
     '''Transform a Fiona/GeoJSON geometry into another projection'''
     if geometry['type'] == 'MultiPolygon':
@@ -159,10 +177,24 @@ def countpoints(geometry):
 
     return length
 
+
 def countsegments(geometry):
     '''Not guaranteed for (multi)point layers'''
     return countpoints(geometry) - 1
 
 
-def flip(x, y):
-    return y, x
+def shapify(geometry):
+    typ = geometry['type']
+    try:
+        if typ == 'MultiPolygon':
+            coords = [Polygon(x) for x in geometry['coordinates']]
+
+        else:
+            coords = geometry['coordinates']
+
+    except ValueError as e:
+        print('Error Shapifying', file=sys.stderr)
+        print(geometry, file=sys.stderr)
+        raise e
+
+    return GEOMS[typ](coords)

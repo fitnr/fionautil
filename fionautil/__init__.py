@@ -10,5 +10,5 @@
 
 from .version import __version__  # NOQA
 
-__all__ = ['convert', 'feature', 'geometry', 'layer', 'measure',]
+__all__ = ['convert', 'feature', 'geometry', 'layer', 'measure', 'coordinates', ]
 
