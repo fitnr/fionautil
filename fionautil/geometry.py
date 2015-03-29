@@ -26,7 +26,7 @@ def endpoint(geometry):
     return end
 
 def bbox(geometry):
-    x, y = zip(*list(explode(geometry['coordinates'])))
+    x, y = zip(*list(explodepoints(geometry['coordinates'])))
     return min(x), min(y), max(x), max(y)
 
 
@@ -70,45 +70,97 @@ def transform_multi(in_proj, out_proj, coordinates):
     return [transform_line(in_proj, out_proj, ring) for ring in coordinates]
 
 
-def explode(geometry):
-    '''A generator that returns every coordinate of every segment of a geometry'''
-    for ring in geometry['coordinates']:
-        for point in ring:
-            yield point
+def explodepoints(geometry):
+    '''Generator that returns every coordinate a geometry'''
+    if geometry['type'] == 'Point':
+        yield geometry['coordinates']
 
-
-def explodelinestring(geometry):
-    '''A generator that returns every line segment of every linestring'''
-
-    if len(geometry['coordinates']) > 1:
-        coords = chain(*geometry['coordinates'])
     else:
-        coords = geometry['coordinates']
+        for ring in exploderings(geometry):
+            for point in ring:
+                yield point
 
-    for ring in coords:
-        for i, point in enumerate(ring[:-1]):
-            yield point, ring[i + 1]
 
+def explodesegments(geometry):
+    '''Generator that returns every line segment of a geometry'''
+    # Sure, could just use explodepoints, but isn't that a
+    # bit more memory-intensive, copying all those lists of coords?
+    if geometry['type'] in ('MultiLineString', 'Polygon'):
+        for ring in geometry['coordinates']:
+            for i, point in enumerate(ring[:-1]):
+                yield point, ring[i + 1]
+
+    elif geometry['type'] in ('LineString', 'MultiPoint'):
+        for i, point in enumerate(geometry['coordinates'][:-1]):
+            yield point, geometry['coordinates'][i + 1]
+
+    elif geometry['type'] == 'MultiPolygon':
+        for poly in geometry['coordinates']:
+            for ring in poly:
+                for i, point in enumerate(ring[:-1]):
+                    yield point, ring[i + 1]
+
+    else:
+        raise ValueError("Unknown or invalid geometry type: {}".format(geometry['type']))
+
+
+def exploderings(geometry):
+    '''Generator that returns every ring of a geometry.
+    A ring is a list of points'''
+    if geometry['type'] in ('MultiLineString', 'Polygon'):
+        for ring in geometry['coordinates']:
+            yield ring
+
+    elif geometry['type'] in ('LineString', 'MultiPoint'):
+        yield geometry['coordinates']
+
+    elif geometry['type'] == 'MultiPolygon':
+        for poly in geometry['coordinates']:
+            for ring in poly:
+                yield ring
+    else:
+        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
 
 def reproject(in_proj, out_proj, geometry):
     '''Transform a Fiona/GeoJSON geometry into another projection'''
-    if geometry['type'] in ('MultiLineString', 'MultiPolygon'):
+    if geometry['type'] == 'MultiPolygon':
+        coords = [transform_multi(in_proj, out_proj, c) for c in geometry['coordinates']]
+
+    if geometry['type'] in ('MultiLineString', 'Polygon'):
         coords = transform_multi(in_proj, out_proj, geometry['coordinates'])
 
-    elif geometry['type'] in ('LineString', 'Polygon'):
+    elif geometry['type'] in ('LineString', 'MultiPoint'):
         coords = transform_line(in_proj, out_proj, geometry['coordinates'])
 
     elif geometry['type'] == 'Point':
         coords = pyproj.transform(in_proj, out_proj, *geometry['coordinates'])
 
+    else:
+        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
+
     return coords
 
 
 def countpoints(geometry):
-    return len(list(chain(*geometry['coordinates'])))
+    if geometry['type'] == 'Point':
+        length = 1
 
+    elif geometry['type'] in ('Linestring', 'MultiPoint'):
+        length = len(geometry['coordinates'])
+
+    if geometry['type'] in ('MultiLinestring', 'Polygon'):
+        length = len(list(chain(*geometry['coordinates'])))
+
+    elif geometry['type'] in ('MultiPolygon'):
+        length = len(list(chain(*chain(*geometry['coordinates']))))
+
+    else:
+        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
+
+    return length
 
 def countsegments(geometry):
+    '''Not guaranteed for (multi)point layers'''
     return countpoints(geometry) - 1
 
 
