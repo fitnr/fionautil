@@ -145,7 +145,7 @@ def reproject(in_proj, out_proj, geometry):
     if geometry['type'] == 'MultiPolygon':
         coords = [transform_multi(in_proj, out_proj, c) for c in geometry['coordinates']]
 
-    if geometry['type'] in ('MultiLineString', 'Polygon'):
+    elif geometry['type'] in ('MultiLineString', 'Polygon'):
         coords = transform_multi(in_proj, out_proj, geometry['coordinates'])
 
     elif geometry['type'] in ('LineString', 'MultiPoint'):
@@ -155,9 +155,9 @@ def reproject(in_proj, out_proj, geometry):
         coords = pyproj.transform(in_proj, out_proj, *geometry['coordinates'])
 
     else:
-        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
+        raise ValueError("Unknown geometry type: {}".format(geometry['type']))
 
-    return coords
+    return {'type': geometry['type'], 'coordinates': coords}
 
 
 def countpoints(geometry):
