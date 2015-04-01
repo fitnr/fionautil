@@ -34,6 +34,7 @@ setup(
     install_requires=[
         'pyproj>=1.9.3,<1.10',
         'fiona>=1.5.0,<2.0',
+        'shapely>=1.5.0,<2.0',
     ],
 
     test_suite='tests',

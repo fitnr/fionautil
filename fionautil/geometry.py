@@ -12,20 +12,21 @@ from . import measure
 from .coordinates import transform_multi, transform_line
 
 
-GEOMS = {
-    'Point': Point,
-    'LineString': LineString,
-    'MultiLineString': MultiLineString,
-    'MultiPoint': MultiPoint,
-    'MultiPolygon': MultiPolygon,
-    'Polygon': Polygon
-}
-
-MULTIS = {
-    'MultiLineString': LineString,
-    'MultiPoint': Point,
-    'MultiPolygon': Polygon
-}
+__all__ = [
+    'endpoints',
+    'startpoint',
+    'endpoint',
+    'bbox',
+    'azimuth',
+    'disjointed',
+    'explodepoints',
+    'explodesegments',
+    'exploderings',
+    'reproject',
+    'countpoints',
+    'countsegments',
+    'shapify',
+]
 
 def endpoints(geometry):
     '''Return the first and last coordinates of a LineString or Multilinestring'''
@@ -182,19 +183,29 @@ def countsegments(geometry):
     '''Not guaranteed for (multi)point layers'''
     return countpoints(geometry) - 1
 
+def _multipolygonize(coordinates):
+    return MultiPolygon([_polygonize(x) for x in coordinates])
+
+def _polygonize(coordinates):
+    return Polygon(coordinates[0], coordinates[1:])
+
+GEOMS = {
+    'Point': Point,
+    'MultiPoint': MultiPoint,
+    'LineString': LineString,
+    'MultiLineString': MultiLineString,
+    'Polygon': _polygonize,
+    'MultiPolygon': _multipolygonize
+}
 
 def shapify(geometry):
-    typ = geometry['type']
     try:
-        if typ == 'MultiPolygon':
-            coords = [Polygon(x) for x in geometry['coordinates']]
+        return GEOMS[geometry['type']](geometry['coordinates'])
 
-        else:
-            coords = geometry['coordinates']
-
-    except ValueError as e:
+    except (IndexError, ValueError) as e:
         print('Error Shapifying', file=sys.stderr)
         print(geometry, file=sys.stderr)
         raise e
 
-    return GEOMS[typ](coords)
+    except KeyError:
+        raise ValueError("Can't shapify that kind of feature.")
