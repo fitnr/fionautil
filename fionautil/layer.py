@@ -79,7 +79,7 @@ def fslice(filename, start, stop=None, step=None):
         stop = start
         start = None
 
-    it = iter(xrange(start or 0, stop or sys.maxint, step or 1))
+    it = xrange(start or 0, stop or sys.maxint, step or 1)
     nexti = next(it)
 
     with fiona.drivers():
