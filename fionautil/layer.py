@@ -5,6 +5,7 @@ import sys
 from .feature import shapify
 from .geometry import disjointed
 
+
 def meta(filename):
     '''Return crs and schema for a layer'''
     with fiona.drivers():
@@ -17,6 +18,7 @@ def bounds(filename):
         with fiona.open(filename, 'r') as layer:
             return layer.bounds()
 
+
 def first(filename):
     '''Return the first feature of a layer'''
     with fiona.drivers():
@@ -24,7 +26,14 @@ def first(filename):
             return next(layer)
 
 
-def fionaiter(iterfunc):
+def fiter(filename):
+    with fiona.drivers():
+        with fiona.open(filename, "r") as layer:
+            for feature in layer:
+                yield feature
+
+
+def _fionaiter(iterfunc):
     def _iter(func, filename, *args):
         with fiona.drivers():
             with fiona.open(filename, "r") as layer:
@@ -33,17 +42,17 @@ def fionaiter(iterfunc):
     return _iter
 
 
-@fionaiter
+@_fionaiter
 def ffilter(func, layer):
     return iter(f for f in layer if func(f))
 
 
-@fionaiter
+@_fionaiter
 def ffilterfalse(func, layer):
     return iter(f for f in layer if not func(f))
 
 
-@fionaiter
+@_fionaiter
 def fmap(func, layer):
     '''Yield features in a fiona layer, applying func to each'''
     return iter(func(f) for f in layer)
@@ -125,4 +134,3 @@ def dissolve(sourcefile, sinkfile, key, unsplit=None):
 
                     else:
                         sink.write(shapelist[0])
-
