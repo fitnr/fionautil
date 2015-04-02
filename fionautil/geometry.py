@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 import sys
 from itertools import chain
@@ -9,7 +10,7 @@ from shapely.geometry.multipoint import MultiPoint
 from shapely.geometry.multipolygon import MultiPolygon
 from shapely.geometry.polygon import Polygon
 from . import measure
-from .coordinates import transform_multi, transform_line
+from .coordinates import reproject_multi, reproject_line
 
 
 __all__ = [
@@ -27,6 +28,7 @@ __all__ = [
     'countsegments',
     'shapify',
 ]
+
 
 def endpoints(geometry):
     '''Return the first and last coordinates of a LineString or Multilinestring'''
@@ -57,7 +59,7 @@ def bbox(geometry):
 
 
 def azimuth(geometry, projection=None, radians=False, clockwise=False):
-    '''return the azimuth of a fiona LineString given a feature and a Proj instance (or note that it's cartesian-ish'''
+    '''return the azimuth between the start and end a Fiona PolyLine given a feature and a Proj instance (or note that it's cartesian-ish'''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
         raise ValueError("This only works with PolyLine layers, this is: {}".format(geometry['type']))
@@ -143,13 +145,13 @@ def exploderings(geometry):
 def reproject(in_proj, out_proj, geometry):
     '''Transform a Fiona/GeoJSON geometry into another projection'''
     if geometry['type'] == 'MultiPolygon':
-        coords = [transform_multi(in_proj, out_proj, c) for c in geometry['coordinates']]
+        coords = [reproject_multi(in_proj, out_proj, c) for c in geometry['coordinates']]
 
     elif geometry['type'] in ('MultiLineString', 'Polygon'):
-        coords = transform_multi(in_proj, out_proj, geometry['coordinates'])
+        coords = reproject_multi(in_proj, out_proj, geometry['coordinates'])
 
     elif geometry['type'] in ('LineString', 'MultiPoint'):
-        coords = transform_line(in_proj, out_proj, geometry['coordinates'])
+        coords = reproject_line(in_proj, out_proj, geometry['coordinates'])
 
     elif geometry['type'] == 'Point':
         coords = pyproj.transform(in_proj, out_proj, *geometry['coordinates'])
@@ -183,8 +185,10 @@ def countsegments(geometry):
     '''Not guaranteed for (multi)point layers'''
     return countpoints(geometry) - 1
 
+
 def _multipolygonize(coordinates):
     return MultiPolygon([_polygonize(x) for x in coordinates])
+
 
 def _polygonize(coordinates):
     return Polygon(coordinates[0], coordinates[1:])
@@ -197,6 +201,7 @@ GEOMS = {
     'Polygon': _polygonize,
     'MultiPolygon': _multipolygonize
 }
+
 
 def shapify(geometry):
     try:
