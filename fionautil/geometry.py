@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import sys
-from itertools import chain
 import pyproj
 from . import measure
 from .coordinates import reproject_multi, reproject_line
@@ -157,27 +155,17 @@ def reproject(in_proj, out_proj, geometry):
 
 def countpoints(geometry):
     if geometry['type'] == 'Point':
-        length = 1
-
-    elif geometry['type'] in ('Linestring', 'MultiPoint'):
-        length = len(geometry['coordinates'])
-
-    if geometry['type'] in ('MultiLinestring', 'Polygon'):
-        length = len(list(chain(*geometry['coordinates'])))
-
-    elif geometry['type'] in ('MultiPolygon'):
-        length = len(list(chain(*chain(*geometry['coordinates']))))
+        return 1
 
     else:
-        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
-
-    return length
+        return sum(len(ring) for ring in exploderings(geometry))
 
 
 def countsegments(geometry):
     '''Not guaranteed for (multi)point layers'''
-    return countpoints(geometry) - 1
+    if geometry['type'] == 'Point':
+        return 0
 
-
-
+    else:
+        return sum(len(ring) - 1 for ring in exploderings(geometry))
 
