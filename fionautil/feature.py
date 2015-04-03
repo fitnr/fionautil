@@ -1,5 +1,6 @@
 from __future__ import print_function
 from fionautil import geometry
+from shapely.geometry import asShape
 from shapely.geometry.linestring import LineString
 from shapely.geometry.multilinestring import MultiLineString
 
@@ -45,7 +46,7 @@ def togeojson(typ, coordinates, properties=None):
 def shapify(feature):
     return {
         'properties': feature.get('properties'),
-        'geometry': geometry.shapify(feature['geometry'])
+        'geometry': asShape(feature['geometry'])
     }
 
 

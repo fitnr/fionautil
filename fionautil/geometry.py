@@ -3,12 +3,6 @@ from __future__ import print_function
 import sys
 from itertools import chain
 import pyproj
-from shapely.geometry.point import Point
-from shapely.geometry.linestring import LineString
-from shapely.geometry.multilinestring import MultiLineString
-from shapely.geometry.multipoint import MultiPoint
-from shapely.geometry.multipolygon import MultiPolygon
-from shapely.geometry.polygon import Polygon
 from . import measure
 from .coordinates import reproject_multi, reproject_line
 
@@ -26,7 +20,6 @@ __all__ = [
     'reproject',
     'countpoints',
     'countsegments',
-    'shapify',
 ]
 
 
@@ -186,31 +179,5 @@ def countsegments(geometry):
     return countpoints(geometry) - 1
 
 
-def _multipolygonize(coordinates):
-    return MultiPolygon([_polygonize(x) for x in coordinates])
 
 
-def _polygonize(coordinates):
-    return Polygon(coordinates[0], coordinates[1:])
-
-GEOMS = {
-    'Point': Point,
-    'MultiPoint': MultiPoint,
-    'LineString': LineString,
-    'MultiLineString': MultiLineString,
-    'Polygon': _polygonize,
-    'MultiPolygon': _multipolygonize
-}
-
-
-def shapify(geometry):
-    try:
-        return GEOMS[geometry['type']](geometry['coordinates'])
-
-    except (IndexError, ValueError) as e:
-        print('Error Shapifying', file=sys.stderr)
-        print(geometry, file=sys.stderr)
-        raise e
-
-    except KeyError:
-        raise ValueError("Can't shapify that kind of feature.")

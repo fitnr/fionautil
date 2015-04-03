@@ -2,9 +2,8 @@ from __future__ import print_function
 import itertools
 import fiona
 import sys
-from .feature import shapify
 from .geometry import disjointed
-
+from shapely.geometry import shape
 
 def meta(filename):
     '''Return crs and schema for a layer'''
@@ -120,7 +119,7 @@ def dissolve(sourcefile, sinkfile, key, unsplit=None):
 
                 for _, feat in source.items():
                     fkey = feat['properties'][key]
-                    fshape = shapify(feat)
+                    fshape = shape(feat['geometry'])
 
                     if fkey in gotkeys:
                         gotkeys[fkey][0] = gotkeys[fkey][0].union(fshape)
