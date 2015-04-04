@@ -35,16 +35,19 @@ def endpoints(geometry):
 
 
 def startpoint(geometry):
+    '''Return the first point in a linear geometry'''
     start, _ = endpoints(geometry)
     return start
 
 
 def endpoint(geometry):
+    '''Return the last point in a linear geometry'''
     _, end = endpoints(geometry)
     return end
 
 
 def bbox(geometry):
+    '''Return the bounds of a geometry (minx, miny, maxx, maxy)'''
     x, y = zip(*list(explodepoints(geometry)))
     return min(x), min(y), max(x), max(y)
 

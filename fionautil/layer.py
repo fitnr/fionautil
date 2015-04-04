@@ -13,9 +13,10 @@ def meta(filename):
 
 
 def bounds(filename):
+    '''Shortcut for returning bounds of a layer (minx, miny, maxx, maxy)'''
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
-            return layer.bounds()
+            return layer.bounds
 
 
 def first(filename):
