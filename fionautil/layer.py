@@ -2,8 +2,10 @@ from __future__ import print_function
 import itertools
 import fiona
 import sys
+from pyproj import Proj
 from .geometry import disjointed
 from shapely.geometry import shape
+
 
 def meta(filename):
     '''Return crs and schema for a layer'''
@@ -100,6 +102,20 @@ def fzip(*filenames):
         finally:
             for h in handles:
                 h.close()
+
+
+def length(filename, proj=None):
+    '''Get the length of a geodata file in its
+    native projection or the given Proj object'''
+
+    with fiona.drivers():
+        with fiona.open(filename, 'r') as layer:
+            if not proj:
+                proj = Proj(*layer.crs)
+
+            return sum(shape({'type': feature['geometry']['type'],
+                              'coordinates': zip(*proj(*feature['geometry']['coordinates']))}).length
+                       for feature in layer)
 
 
 def find(filename, key, value):

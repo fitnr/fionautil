@@ -58,3 +58,6 @@ def clockwise(coords):
 
 def counterclockwise(coords):
     return signed_area(coords) >= 0
+
+
+
