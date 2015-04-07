@@ -50,11 +50,6 @@ def shapify(feature):
     }
 
 
-def reproject(in_proj, out_proj, feature):
-    feature['geometry'] = geometry.reproject(in_proj, out_proj, feature['geometry'])
-    return feature
-
-
 def length(feature):
     '''Returns shapely length'''
     if feature['geometry']['type'] == 'LineString':

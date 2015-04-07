@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import pyproj
 from . import measure
-from .coordinates import reproject_multi, reproject_line
 
 
 __all__ = [
@@ -15,7 +13,6 @@ __all__ = [
     'explodepoints',
     'explodesegments',
     'exploderings',
-    'reproject',
     'countpoints',
     'countsegments',
 ]
@@ -134,26 +131,6 @@ def exploderings(geometry):
                 yield ring
     else:
         raise ValueError("Unkown geometry type: {}".format(geometry['type']))
-
-
-def reproject(in_proj, out_proj, geometry):
-    '''Transform a Fiona/GeoJSON geometry into another projection'''
-    if geometry['type'] == 'MultiPolygon':
-        coords = [reproject_multi(in_proj, out_proj, c) for c in geometry['coordinates']]
-
-    elif geometry['type'] in ('MultiLineString', 'Polygon'):
-        coords = reproject_multi(in_proj, out_proj, geometry['coordinates'])
-
-    elif geometry['type'] in ('LineString', 'MultiPoint'):
-        coords = reproject_line(in_proj, out_proj, geometry['coordinates'])
-
-    elif geometry['type'] == 'Point':
-        coords = pyproj.transform(in_proj, out_proj, *geometry['coordinates'])
-
-    else:
-        raise ValueError("Unknown geometry type: {}".format(geometry['type']))
-
-    return {'type': geometry['type'], 'coordinates': coords}
 
 
 def countpoints(geometry):
