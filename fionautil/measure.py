@@ -60,4 +60,12 @@ def counterclockwise(coords):
     return signed_area(coords) >= 0
 
 
+def azimuth_distance(x0, y0, x1, y1, latlong=True):
+    '''Azimuth and distance between two points'''
+    if latlong:
+        az, _, dist = WGS84.inv(x0, y0, x1, y1)
+    else:
+        az = azimuth(x0, y0, x1, y1, latlong=latlong)
+        dist = distance(x0, y0, x1, y1, latlong=latlong)
 
+    return az, dist
