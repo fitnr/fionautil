@@ -9,11 +9,10 @@
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
 from setuptools import setup, find_packages
-from fionautil import __version__
 
 setup(
     name='fionautil',
-    version=__version__,
+    version='0.3',
     description='helpful utilities for working with geodata with Fiona',
     long_description='readme.rst',
     keywords='GIS',
@@ -24,7 +23,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GPLv3 License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Operating System :: OS Independent',
