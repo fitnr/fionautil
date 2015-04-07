@@ -6,4 +6,4 @@
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
 readme.rst: readme.md
-	pandoc -o $@ $<
+	which pandoc > /dev/null && pandoc $< -o $@ || touch $@
