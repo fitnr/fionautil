@@ -1,4 +1,5 @@
 from __future__ import print_function
+import fiona.transform
 from fionautil import geometry
 from shapely.geometry import asShape
 from shapely.geometry.linestring import LineString
@@ -76,3 +77,12 @@ def compound(feature):
         return True
 
     return False
+
+
+def transform(in_crs, out_crs, feature):
+    '''Apply fiona.transform.transform_geom to a feature's geometry,
+    and return the updated feature'''
+    return {
+        'properties': feature.get('properties'),
+        'geometry': fiona.transform.transform_geom(in_crs, out_crs, feature['geometry'])
+    }
