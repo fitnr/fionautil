@@ -134,6 +134,7 @@ def exploderings(geometry):
 
 
 def countpoints(geometry):
+    '''Returns the number of points in a geometry'''
     if geometry['type'] == 'Point':
         return 1
 
@@ -148,4 +149,3 @@ def countsegments(geometry):
 
     else:
         return sum(len(ring) - 1 for ring in exploderings(geometry))
-

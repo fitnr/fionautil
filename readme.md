@@ -4,26 +4,34 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
 
 ## Contents
 
-* convert
-  * rect (from polar)
-  * polar (to rect)
-
 * feature
-  * endpoint (for polyline features)
-  * startpoint (for polyline features)
-  * endpoint (for polyline features)
-  * azimuth (between the start and end of a polyline)
-  * rotate
+  * overlaps
   * field_contains_test (test if a feature's properties has certain key:value pairs)
-  * geojson_feature (return a geojson-ready object)
+  * togeojson (return a geojson-ready object)
+  * shapify
+  * length
+  * compound
 
 * geometry
-  * explode (generator that yields the pairs of points from a geometry)
-  * reproject (convert a geometry from one projection to another)
+  * endpoints (for polyline features)
+  * startpoint (for polyline features)
+  * endpoint (for polyline features)
+  * bbox
+  * azimuth (between the start and end of a polyline)
+  * disjointed
+  * explodepoints
+  * explodesegments
+  * exploderings
+  * countpoints
+  * countsegments
 
 * measure
-  * distance (between two lat, lng)
-  * azimuth (between two lat, lng or two projected points)
+  * distance (between two coordinates)
+  * azimuth (between two coordinates)
+  * signed_area
+  * clockwise (shortcut for checking if signed_area is >= 0)
+  * counterclockwise (shortcut for checking if signed_area is < 0)
+  * azimuth_distance (returns both azimuth and distance between two points)
 
 * layer (tools that mimic basic python itertools)
   * ffilter
@@ -33,8 +41,7 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
   * freduce
   * fslice
   * fzip
+  * length Total length of linear features in a file's native projection or the given Proj object
+  * meta (records a layers meta attribute)
+  * bounds (returns a layer's bounds)
   * find (return a feature that matches a particular key=value)
-
-* rotation
-  * point
-  * linestring

@@ -44,6 +44,8 @@ def togeojson(typ, coordinates, properties=None):
 
 
 def shapify(feature):
+    '''Applies shapely.geometry.asShape to the geometry part of a feature
+    and returns a new feature object with properties intact'''
     return {
         'properties': feature.get('properties'),
         'geometry': asShape(feature['geometry'])
