@@ -4,7 +4,8 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
 
 ## Contents
 
-* feature
+### feature
+
   * overlaps
   * field_contains_test (test if a feature's properties has certain key:value pairs)
   * togeojson (return a geojson-ready object)
@@ -12,7 +13,8 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
   * length
   * compound
 
-* geometry
+### geometry
+
   * endpoints (for polyline features)
   * startpoint (for polyline features)
   * endpoint (for polyline features)
@@ -25,15 +27,10 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
   * countpoints
   * countsegments
 
-* measure
-  * distance (between two coordinates)
-  * azimuth (between two coordinates)
-  * signed_area
-  * clockwise (shortcut for checking if signed_area is >= 0)
-  * counterclockwise (shortcut for checking if signed_area is < 0)
-  * azimuth_distance (returns both azimuth and distance between two points)
+### layer
 
-* layer (tools that mimic basic python itertools)
+Most of these tools that mimic builtin python itertools.
+
   * ffilter
   * ffilterfalse
   * fmap
@@ -45,3 +42,13 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
   * meta (records a layers meta attribute)
   * bounds (returns a layer's bounds)
   * find (return a feature that matches a particular key=value)
+
+### measure
+
+  * distance (between two coordinates)
+  * azimuth (between two coordinates)
+  * signed_area
+  * clockwise (shortcut for checking if signed_area is >= 0)
+  * counterclockwise (shortcut for checking if signed_area is < 0)
+  * azimuth_distance (returns both azimuth and distance between two points)
+
