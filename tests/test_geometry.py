@@ -1,12 +1,5 @@
 import unittest
-import pyproj
 import fionautil.geometry
-from shapely.geometry.point import Point
-from shapely.geometry.linestring import LineString
-from shapely.geometry.multilinestring import MultiLineString
-from shapely.geometry.multipoint import MultiPoint
-from shapely.geometry.multipolygon import MultiPolygon
-from shapely.geometry.polygon import Polygon
 
 class GeometryTestCase(unittest.TestCase):
 
@@ -43,22 +36,7 @@ class GeometryTestCase(unittest.TestCase):
         self.assertRaises(ValueError, fionautil.geometry.endpoints, self.polygon)
         self.assertEqual(fionautil.geometry.endpoints(self.linestring), (self.linestring['coordinates'][0], self.linestring['coordinates'][-1]))
 
-    def test_reproject(self):
-        in_proj = pyproj.Proj(init='EPSG:4269')
-        out_proj = pyproj.Proj(init='epsg:26943')
-        reprojected = fionautil.geometry.reproject(in_proj, out_proj, self.polygon)
-        self.assertEqual(reprojected['coordinates'][0][0], self.epsgpoly[0])
-        self.assertEqual(reprojected['coordinates'][0], self.epsgpoly)
 
-    def test_shapify(self):
-        ls = fionautil.geometry.shapify(self.linestring)
-        assert isinstance(ls, LineString)
-
-        pg = fionautil.geometry.shapify(self.polygon)
-        assert isinstance(pg, Polygon)
-
-        mpg = fionautil.geometry.shapify(self.multipolygon)
-        assert isinstance(mpg, MultiPolygon)
 
 
 if __name__ == '__main__':

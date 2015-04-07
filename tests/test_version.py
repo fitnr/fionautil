@@ -8,11 +8,11 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
+import unittest
 from fionautil import __version__
-from tests.base import TestCase
 
 
-class VersionTestCase(TestCase):
+class VersionTestCase(unittest.TestCase):
     def test_has_proper_version(self):
-        assert __version__ == '0.2.0'
+        assert __version__ == '0.3.0'
 

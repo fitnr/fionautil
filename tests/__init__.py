@@ -9,5 +9,5 @@
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
 from . import test_layer
-from . import test_rotate
+from . import test_geometry
 from . import test_version
