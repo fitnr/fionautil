@@ -21,3 +21,4 @@ from . import feature
 from . import geometry
 from . import layer
 from . import measure
+from . import coords

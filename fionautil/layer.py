@@ -118,6 +118,20 @@ def length(filename, proj=None):
                        for feature in layer)
 
 
+def perimeter(filename, proj=None):
+    '''Get perimeter of all features in a geodata file in its
+    native projection or the given Proj object'''
+
+    with fiona.drivers():
+        with fiona.open(filename, 'r') as layer:
+            if not proj:
+                proj = Proj(*layer.crs)
+
+            return sum(shape({'type': feature['geometry']['type'],
+                              'coordinates': zip(*proj(*feature['geometry']['coordinates']))}).boundary.length
+                       for feature in layer)
+
+
 def find(filename, key, value):
     '''Special case of ffilter: return the first feature where key==value'''
     test = lambda f: f['properties'][key] == value
