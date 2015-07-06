@@ -46,7 +46,13 @@ def signed_area(coords):
     """Return the signed area enclosed by a ring using the linear time
     algorithm at http://www.cgafaq.info/wiki/Polygon_Area. A value >= 0
     indicates a counter-clockwise oriented ring."""
-    xs, ys = map(list, zip(*coords))
+
+    try:
+        xs, ys = map(list, zip(*coords))
+    except ValueError:
+        # Attempt to handle a z-dimension
+        xs, ys, _ = map(list, zip(*coords))
+
     xs.append(xs[1])
     ys.append(ys[1])
     return sum(xs[i] * (ys[i + 1] - ys[i - 1]) for i in range(1, len(coords))) / 2.0
