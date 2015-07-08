@@ -11,14 +11,10 @@ def min_x(coords):
 def min_y(coords):
     return min((c[1] for c in coords))
 
-def minimum(coords, dist=None):
-    dist = dist or (lambda c: c[0]**2 + c[1]**2)
-    return sorted(coords, key=dist).pop(0)
-
-def maximum(coords, dist=None):
-    dist = dist or (lambda c: c[0]**2 + c[1]**2)
-    return sorted(coords, key=dist).pop()
-
 def segmentize(ring):
     for i, point in enumerate(ring[:-1]):
         yield point, ring[i + 1]
+
+def bounds(ring):
+    '''Return minimum bounding rectangle for a ring'''
+    return min_x(ring), min_y(ring), max_x(ring), max_y(ring)
