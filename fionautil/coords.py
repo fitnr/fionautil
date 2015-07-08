@@ -18,3 +18,7 @@ def minimum(coords, dist=None):
 def maximum(coords, dist=None):
     dist = dist or (lambda c: c[0]**2 + c[1]**2)
     return sorted(coords, key=dist).pop()
+
+def segmentize(ring):
+    for i, point in enumerate(ring[:-1]):
+        yield point, ring[i + 1]
