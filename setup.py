@@ -29,7 +29,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     packages=find_packages(),
-    include_package_data=False,
+    include_package_data=True,
     install_requires=[
         'pyproj>=1.9.3,<1.10',
         'fiona>=1.5.0,<2.0',
@@ -39,9 +39,5 @@ setup(
     test_suite='tests',
 
     use_2to3=True,
-
-    tests_require=[
-        'tox'
-    ],
 
 )
