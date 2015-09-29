@@ -10,11 +10,16 @@
 
 from setuptools import setup, find_packages
 
+try:
+    readme = open('readme.rst').read()
+except IOError:
+    readme = open('readme.md').read()
+
 setup(
     name='fionautil',
     version='0.3',
     description='helpful utilities for working with geodata with Fiona',
-    long_description=open('readme.rst').read(),
+    long_description=readme,
     keywords='GIS',
     author='Neil Freeman',
     author_email='contact@fakeisthenewreal.org',
