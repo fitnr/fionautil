@@ -17,7 +17,7 @@ except IOError:
 
 setup(
     name='fionautil',
-    version='0.3',
+    version='0.3.1',
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',
