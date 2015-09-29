@@ -7,3 +7,9 @@
 
 readme.rst: readme.md
 	pandoc $< -o $@ || cp $< $@
+
+.PHONY: cov
+cov:
+	coverage run setup.py test
+	coverage html
+	open htmlcov/index.html
