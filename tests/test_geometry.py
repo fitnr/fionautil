@@ -36,7 +36,29 @@ class GeometryTestCase(unittest.TestCase):
         self.assertRaises(ValueError, fionautil.geometry.endpoints, self.polygon)
         self.assertEqual(fionautil.geometry.endpoints(self.linestring), (self.linestring['coordinates'][0], self.linestring['coordinates'][-1]))
 
+    def testExplodeValueError(self):
+        objfoo = {'type': 'Foo', 'coordinates': [(1, 0), (2, 2), (3, 4)]}
+        self.assertRaises(ValueError, next, fionautil.geometry.explodepoints(objfoo))
+        self.assertRaises(ValueError, next, fionautil.geometry.explodesegments(objfoo))
+        self.assertRaises(ValueError, next, fionautil.geometry.exploderings(objfoo))
 
+    def testExplodesegmentsPoly(self):
+        exploded = fionautil.geometry.explodesegments(self.polygon)
+
+        self.assertEqual(next(exploded), tuple(self.polygon['coordinates'][0][0:2]))
+        self.assertEqual(next(exploded), tuple(self.polygon['coordinates'][0][1:3]))
+
+    def testExplodesegmentsLineString(self):
+        exploded = fionautil.geometry.explodesegments(self.linestring)
+
+        self.assertEqual(next(exploded), tuple(self.linestring['coordinates'][0:2]))
+        self.assertEqual(next(exploded), tuple(self.linestring['coordinates'][1:3]))
+
+    def testExplodesegmentsMultipoly(self):
+        exploded = fionautil.geometry.explodesegments(self.multipolygon)
+
+        self.assertEqual(next(exploded), tuple(self.multipolygon['coordinates'][0][0][0:2]))
+        self.assertEqual(next(exploded), tuple(self.multipolygon['coordinates'][0][0][1:3]))
 
 
 if __name__ == '__main__':

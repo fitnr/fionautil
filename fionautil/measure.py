@@ -14,7 +14,7 @@ def distance(x0, y0, x1, y1, latlong=True):
 
 
 def _projected_azimuth(x0, y0, x1, y1):
-    '''The angle between two points on a cartesian plane. Always clockwise and in degrees'''
+    '''The angle of a line between two points on a cartesian plane. Always clockwise and in degrees'''
     if y0 == y1:
         if x0 == x1:
             az = 0

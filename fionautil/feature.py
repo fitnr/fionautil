@@ -7,7 +7,15 @@ from shapely.geometry.multilinestring import MultiLineString
 
 
 def field_contains_test(field_values):
-    '''Return a test function that checks if the properties of a feature '''
+    '''
+    Return a test function that checks if the properties of a feature match the possible values in field_values.
+
+    >>> test = field_contains_test({'a': (1, 2, 3)})
+    >>> test({'properties': {'a': 1}})
+    True
+    >>> test({'properties': {'a': 4}})
+    False
+    '''
     def test(feature):
         for k, v in field_values.items():
             if feature['properties'].get(k) not in v:
