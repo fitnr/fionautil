@@ -8,7 +8,7 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
-__version__ = '0.3.0'  # NOQA
+__version__ = '0.3.2'
 
 __all__ = [
     'feature',
