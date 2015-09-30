@@ -17,7 +17,7 @@ except IOError:
 
 setup(
     name='fionautil',
-    version='0.3.1',
+    version='0.3.2',
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',
@@ -30,7 +30,9 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Operating System :: OS Independent',
     ],
     packages=find_packages(),
