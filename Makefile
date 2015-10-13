@@ -5,11 +5,17 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
-readme.rst: readme.md
+README.rst: README.md
 	pandoc $< -o $@ || cp $< $@
 
-.PHONY: cov
+.PHONY: cov deploy
 cov:
 	coverage run setup.py test
 	coverage html
 	open htmlcov/index.html
+
+deploy:
+	rm dist/*
+	python setup.py sdist
+	python3 setup.py sdist bdist_wheel
+	twine upload dist/*

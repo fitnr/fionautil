@@ -11,13 +11,13 @@
 from setuptools import setup, find_packages
 
 try:
-    readme = open('readme.rst').read()
+    readme = open('README.rst').read()
 except IOError:
-    readme = open('readme.md').read()
+    readme = ''
 
 setup(
     name='fionautil',
-    version='0.3.2',
+    version='0.3.3',
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',
@@ -46,5 +46,4 @@ setup(
     test_suite='tests',
 
     use_2to3=True,
-
 )
