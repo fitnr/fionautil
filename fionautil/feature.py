@@ -1,9 +1,12 @@
 from __future__ import print_function
 import fiona.transform
 from fionautil import geometry
-from shapely.geometry import asShape
-from shapely.geometry.linestring import LineString
-from shapely.geometry.multilinestring import MultiLineString
+try:
+    from shapely.geometry import asShape
+    from shapely.geometry.linestring import LineString
+    from shapely.geometry.multilinestring import MultiLineString
+except ImportError:
+    pass
 
 
 def field_contains_test(field_values):
@@ -55,19 +58,27 @@ def togeojson(typ, coordinates, properties=None):
 def shapify(feature):
     '''Applies shapely.geometry.asShape to the geometry part of a feature
     and returns a new feature object with properties intact'''
-    return {
-        'properties': feature.get('properties'),
-        'geometry': asShape(feature['geometry'])
-    }
+    try:
+        return {
+            'properties': feature.get('properties'),
+            'geometry': asShape(feature['geometry'])
+        }
+
+    except NameError:
+        raise NotImplementedError("shapify requires shapely")
 
 
 def length(feature):
     '''Returns shapely length'''
-    if feature['geometry']['type'] == 'LineString':
-        geom = LineString(feature['geometry']['coordinates'])
+    try:
+        if feature['geometry']['type'] == 'LineString':
+            geom = LineString(feature['geometry']['coordinates'])
 
-    elif feature['geometry']['type'] == 'MultiLineString':
-        geom = MultiLineString(feature['geometry']['coordinates'])
+        elif feature['geometry']['type'] == 'MultiLineString':
+            geom = MultiLineString(feature['geometry']['coordinates'])
+
+    except NameError:
+        raise NotImplementedError("length requires shapely")
 
     return geom.length
 

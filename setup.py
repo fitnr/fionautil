@@ -15,6 +15,8 @@ try:
 except IOError:
     readme = ''
 
+shapely = 'shapely>=1.5.0,<2.0'
+
 setup(
     name='fionautil',
     version='0.3.3',
@@ -40,8 +42,13 @@ setup(
     install_requires=[
         'pyproj>=1.9.3,<1.10',
         'fiona>=1.5.0,<2.0',
-        'shapely>=1.5.0,<2.0',
     ],
+
+    extras_require={
+        'shapify': [shapely],
+        'length': [shapely],
+        'dissolve': [shapely],
+    },
 
     test_suite='tests',
 

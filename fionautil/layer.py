@@ -4,8 +4,10 @@ import fiona
 import sys
 from pyproj import Proj
 from .geometry import disjointed
-from shapely.geometry import shape
-
+try:
+    from shapely.geometry import shape
+except ImportError:
+    pass
 
 def meta(filename):
     '''Return crs and schema for a layer'''
@@ -107,6 +109,10 @@ def fzip(*filenames):
 def length(filename, proj=None):
     '''Get the length of a geodata file in its
     native projection or the given Proj object'''
+    try:
+        shape
+    except NameError:
+        raise NotImplementedError("length require shapely")
 
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
@@ -121,6 +127,10 @@ def length(filename, proj=None):
 def perimeter(filename, proj=None):
     '''Get perimeter of all features in a geodata file in its
     native projection or the given Proj object'''
+    try:
+        shape
+    except NameError:
+        raise NotImplementedError("perimeter require shapely")
 
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
@@ -139,6 +149,11 @@ def find(filename, key, value):
 
 
 def dissolve(sourcefile, sinkfile, key, unsplit=None):
+    try:
+        shape
+    except NameError:
+        raise NotImplementedError("dissolve require shapely")
+
     with fiona.drivers():
         with fiona.open(sourcefile) as source:
             schema = source.schema

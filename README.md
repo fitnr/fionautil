@@ -2,6 +2,10 @@
 
 Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fiona/1.5.0). Some features are shorthand for [pyproj](https://pypi.python.org/pypi/pyproj) features, or add in support for projections.
 
+By defauly, the only prerequisites are `pyproj` and Fiona itself.
+
+By default, the package installs without shapely. A small number of functions, marked below, do require shapely. To use these function, install with `pip install fionautil[functionname]` or just separately install shapely.
+
 ## Contents
 
 ### feature
@@ -9,8 +13,8 @@ Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fio
   * overlaps
   * field_contains_test (test if a feature's properties has certain key:value pairs)
   * togeojson (return a geojson-ready object)
-  * shapify
-  * length
+  * shapify (requires shapely)
+  * length (requires shapely)
   * compound
 
 ### geometry
