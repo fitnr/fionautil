@@ -15,7 +15,8 @@ cov:
 	open htmlcov/index.html
 
 deploy:
-	rm dist/*
+	rm -rf dist build
 	python setup.py sdist
+	rm -rf build
 	python3 setup.py sdist bdist_wheel
 	twine upload dist/*

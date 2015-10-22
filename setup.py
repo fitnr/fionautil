@@ -19,14 +19,14 @@ shapely = 'shapely>=1.5.0,<2.0'
 
 setup(
     name='fionautil',
-    version='0.3.3',
+    version='0.4.0',
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',
     author='Neil Freeman',
     author_email='contact@fakeisthenewreal.org',
     url='http://github.com/fitnr/fionautil/',
-    license='GPLv3',
+    license='GNU General Public License v3 (GPLv3)',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
