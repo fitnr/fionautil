@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from . import measure
-
+from .coords import roundring, roundpolyring
 
 __all__ = [
     'endpoints',
@@ -15,6 +15,7 @@ __all__ = [
     'exploderings',
     'countpoints',
     'countsegments',
+    'roundgeometry'
 ]
 
 
@@ -50,7 +51,13 @@ def bbox(geometry):
 
 
 def azimuth(geometry, projection=None, radians=False, clockwise=False):
-    '''return the azimuth between the start and end a Fiona PolyLine given a feature and a Proj instance (or note that it's cartesian-ish'''
+    '''
+    return the azimuth between the start and end of a polyline geometry
+    :geometry object A geojson-like geometry object
+    :projection Proj
+    :radians bool
+    :clockwise bool
+    '''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
         raise ValueError("This only works with PolyLine layers, this is: {}".format(geometry['type']))
@@ -149,3 +156,25 @@ def countsegments(geometry):
 
     else:
         return sum(len(ring) - 1 for ring in exploderings(geometry))
+
+
+def roundgeometry(geometry, precision=None):
+    '''Round all the coordinates in a geometry to a given precision. Defaults to 5.'''
+    precision = 5 if precision is None else precision
+
+    if geometry['type'] == 'Point':
+        geometry['coordinates'] = roundring([geometry['coordinates']], precision).pop(0)
+
+    elif geometry['type'] in ('LineString', 'MultiPoint'):
+        geometry['coordinates'] = roundring(geometry['coordinates'], precision)
+
+    elif geometry['type'] in ('MultiLineString', 'Polygon'):
+        geometry['coordinates'] = roundpolyring(geometry['coordinates'], precision)
+
+    elif geometry['type'] == 'MultiPolygon':
+        geometry['coordinates'] = [roundpolyring(pr, precision) for pr in geometry['coordinates']]
+
+    else:
+        raise ValueError("Unknown or invalid geometry type: {}".format(geometry['type']))
+
+    return geometry

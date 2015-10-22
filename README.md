@@ -30,6 +30,7 @@ By default, the package installs without shapely. A small number of functions, m
   * exploderings
   * countpoints
   * countsegments
+  * roundgeometry - round all coordinates in a geometry to a given precision
 
 ### layer
 
