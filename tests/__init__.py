@@ -13,3 +13,4 @@ from . import test_feature
 from . import test_layer
 from . import test_measure
 from . import test_geometry
+from . import test_scale

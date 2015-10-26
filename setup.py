@@ -48,6 +48,7 @@ setup(
         'shapify': [shapely],
         'length': [shapely],
         'dissolve': [shapely],
+        'speed': ['numpy>1.9']
     },
 
     test_suite='tests',

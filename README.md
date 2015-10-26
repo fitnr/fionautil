@@ -57,3 +57,9 @@ Most of these tools that mimic builtin python itertools.
   * counterclockwise (shortcut for checking if signed_area is < 0)
   * azimuth_distance (returns both azimuth and distance between two points)
 
+### scale
+  Utilities for scaling a feature or geometry by a given constant. Goes faster with Numpy installed.
+  * geometry
+  * scale_rings
+  * scale - scales a list of coordinates
+  * feature - scale the geometry of a feature

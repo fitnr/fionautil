@@ -15,6 +15,7 @@ __all__ = [
     'geometry',
     'layer',
     'measure',
+    'scale'
 ]
 
 from . import feature
@@ -22,3 +23,4 @@ from . import geometry
 from . import layer
 from . import measure
 from . import coords
+from . import scale
