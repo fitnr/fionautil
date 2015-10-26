@@ -15,6 +15,7 @@ cov:
 	open htmlcov/index.html
 
 deploy:
+	git push && git push --tags
 	rm -rf dist build
 	python setup.py sdist
 	rm -rf build
