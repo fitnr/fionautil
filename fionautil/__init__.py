@@ -8,7 +8,14 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
-__version__ = '0.4.1'
+from . import feature
+from . import geometry
+from . import layer
+from . import measure
+from . import coords
+from . import scale
+
+__version__ = '0.4.2'
 
 __all__ = [
     'feature',
@@ -17,10 +24,3 @@ __all__ = [
     'measure',
     'scale'
 ]
-
-from . import feature
-from . import geometry
-from . import layer
-from . import measure
-from . import coords
-from . import scale
