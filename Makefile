@@ -6,18 +6,23 @@
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
 README.rst: README.md
-	pandoc $< -o $@ || cp $< $@
+	- pandoc $< -o $@
+	@touch $@
+	python setup.py check --restructuredtext --strict
 
-.PHONY: cov deploy
+.PHONY: cov deploy clean
 cov:
 	coverage run setup.py test
 	coverage html
 	open htmlcov/index.html
 
-deploy:
-	git push && git push --tags
-	rm -rf dist build
+deploy: README.rst | clean
+	python setup.py register
 	python setup.py sdist
 	rm -rf build
 	python3 setup.py sdist bdist_wheel
 	twine upload dist/*
+	git push
+	git push --tags
+
+clean: ; rm -rf dist build
