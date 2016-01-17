@@ -28,11 +28,11 @@ class TestCoords(PythonTestCase):
         try:
             arr = np.array(self.coordsx2, dtype=float).tolist()
             result = result.tolist()
+            self.assertEqual(result, arr)
 
         except NameError:
-            pass
+            self.assertEqual(list(result), self.coordsx2)
 
-        self.assertEqual(result, arr)
 
 if __name__ == '__main__':
     unittest.main()
