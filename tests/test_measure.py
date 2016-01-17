@@ -61,6 +61,76 @@ class TestMeasure(PythonTestCase):
         self.assertEqual(measure.azimuth_distance(0, 0, 90, 0), (90, 10018754.171394622))
         self.assertEqual(measure.azimuth_distance(1, 0, 0, 0, latlong=False), (-270, 1))
 
+    def testDet(self):
+        assert measure.det((1, 2), (3, 4)) == -2
+        assert measure.det((3, 4), (1, 2)) == 2
+        assert measure.det((100, 4), (1, -100)) == -10004
+
+    def testIntersectingbounds(self):
+        a = (0, 0, 10, 10)
+        b = (0, 0, 9, 9)
+        c = (10, 10, 20, 20)
+
+        assert measure.intersectingbounds(a, b) is True
+        assert measure.intersectingbounds(a, c) is True
+        assert measure.intersectingbounds(b, c) is False
+
+    def testIntersection(self):
+        a = ((0, 0), (10, 10))
+        b = ((10, 0), (0, 10))
+        c = ((0, 5), (10, 5))
+        d = ((12, 100), (13, 102))
+        e = (0, 0), (5, 5)
+
+        f = ((0, 0), (10, 0))
+        g = ((5, 0), (15, 0))
+
+        h = ((0, 0), (0, 10))
+        i = ((0, 5), (0, 15))
+
+        j = ((11, 11), (12, 12))
+
+        k = (4, 5), (10, 11)
+        m = (10, 10), (0, 0)
+        n = (0, 10), (10, 10)
+
+        self.assertEqual(measure.intersect(a, b), (5, 5))
+        self.assertEqual(measure.intersect(a, c), (5, 5))
+
+        self.assertIn(measure.intersect(a, e), list(a) + list(e))
+        assert measure.intersect(e, a) in list(a) + list(e)
+
+        assert measure.intersect(a, d) is None
+        assert measure.intersect(b, d) is None
+
+        assert measure.intersect(f, g) in list(f) + list(g)
+        assert measure.intersect(g, f) in list(f) + list(g)
+
+        assert measure.intersect(h, i) in list(h) + list(i)
+        assert measure.intersect(i, h) in list(h) + list(i)
+
+        assert measure.intersect(a, j) is None
+        assert measure.intersect(k, m) is None
+        assert measure.intersect(k, n) == (9, 10)
+
+
+    def testIntersectionDet(self):
+        minx, miny, maxx, maxy = 0, 0, 10, 10
+        edges = (
+            ((minx, miny), (minx, maxy)),
+            ((minx, maxy), (maxx, maxy)),
+            ((maxx, maxy), (maxx, miny)),
+            ((maxx, miny), (minx, miny))
+        )
+        dets = [measure.det(*j) for j in edges]
+        assert dets == [0, -100, -100, 0]
+
+        a = (4, 5), (10, 11)
+        assert measure.intersect(edges[0], a) is None
+        assert measure.intersect(edges[1], a) == (9, 10)
+
+        inters = [measure.intersect(e, a, detm=d) for e, d in zip(edges, dets)]
+        self.assertListEqual(inters, [None, (9, 10), None, None])
 
 if __name__ == '__main__':
     unittest.main()

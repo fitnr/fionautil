@@ -56,6 +56,8 @@ Most of these tools that mimic builtin python itertools.
   * clockwise (shortcut for checking if signed_area is >= 0)
   * counterclockwise (shortcut for checking if signed_area is < 0)
   * azimuth_distance (returns both azimuth and distance between two points)
+  * intersect (check if two planar line segments intersect)
+  * onsegment (check if a point lines on a line segment)
 
 ### scale
   Utilities for scaling a feature or geometry by a given constant. Goes faster with Numpy installed.
