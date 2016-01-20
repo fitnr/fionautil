@@ -40,8 +40,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'pyproj>=1.9.3,<1.10',
-        'fiona>=1.5.0,<2.0',
+        'pyproj>=1.9.5,<1.10',
+        'fiona>=1.6.3,<2.0',
     ],
 
     extras_require={
