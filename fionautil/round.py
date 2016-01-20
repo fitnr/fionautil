@@ -5,7 +5,15 @@ except ImportError:
 
 def _round(pt, precision):
     try:
+        return np.round(pt, precision)
+
+    except NameError:
+        return _round_plain(pt, precision)
+
+def _round_plain(pt, precision):
+    try:
         return round(pt[0], precision), round(pt[1], precision)
+
     except TypeError:
         pt = list(pt)
         return round(pt[0], precision), round(pt[1], precision)
@@ -19,15 +27,15 @@ def round_ring(ring, precision):
 
 
 def round_ringlist(coordinates, precision):
-    # Drop possible Z coordinates and round. Two tracks here: numpy style and without-numpy style.
+    # Two tracks here: numpy style and without-numpy style.
     try:
-        return [np.round(np.array(ring)[:, 0:2], precision) for ring in coordinates]
-
+        return np.round(coordinates, precision)
     except NameError:
-        return [round_ring(coordinates, precision) for ring in coordinates]
+        return [round_ring(r, precision) for r in coordinates]
 
 
 def geometry(geom, precision):
+
     if geom['type'] == 'Point':
         geom['coordinates'] = _round(geom['coordinates'], precision)
 
