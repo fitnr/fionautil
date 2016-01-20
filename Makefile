@@ -12,9 +12,9 @@ README.rst: README.md
 
 .PHONY: cov deploy clean
 cov:
-	coverage run setup.py test
+	- coverage run setup.py test
+	coverage report
 	coverage html
-	open htmlcov/index.html
 
 deploy: README.rst | clean
 	python setup.py register

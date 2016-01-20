@@ -13,14 +13,16 @@ from . import geometry
 from . import layer
 from . import measure
 from . import coords
+from . import round
 from . import scale
 
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 __all__ = [
     'feature',
     'geometry',
     'layer',
     'measure',
+    'round',
     'scale'
 ]
