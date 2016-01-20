@@ -59,6 +59,10 @@ Most of these tools that mimic builtin python itertools.
   * intersect (check if two planar line segments intersect)
   * onsegment (check if a point lines on a line segment)
 
+### round
+  * geometry - round all coordinates in a geometry to a specified precision
+  * feature
+
 ### scale
   Utilities for scaling a feature or geometry by a given constant. Goes faster with Numpy installed.
   * geometry
