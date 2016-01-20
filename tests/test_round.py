@@ -20,21 +20,41 @@ class RoundTestCase(unittest.TestCase):
 
     def testRound(self):
         ring = [(10.00011111, 10.00011111), (10.00011111, 10.00011111)]
-        assert fionautil.round._round(ring[0], 1) == (10.0, 10.0)
-        assert fionautil.round.round_ring(ring, 1) == [(10.0, 10.0), (10.0, 10.0)]
+        round1 = fionautil.round._round(ring[0], 1)
+        round2 = fionautil.round.round_ring(ring, 1)
+
+        try:
+            round1 = round1.tolist()
+            round2 = round2[0].tolist()
+        except AttributeError:
+            round2 = round2[0]
+
+        self.assertSequenceEqual(round1, (10.0, 10.0))
+        self.assertSequenceEqual(round2, (10.0, 10.0))
 
     def testRoundPolygon(self):
         g = fionautil.round.geometry(self.polygon, 3)
-        self.assertSequenceEqual(g['coordinates'][0][0], [100.111, 0.0])
+
+        try:
+            coordinates = g['coordinates'].tolist()
+        except AttributeError:
+            coordinates = g['coordinates']
+
+        self.assertSequenceEqual(coordinates[0][0], [100.111, 0.0])
 
     def testRoundMultiPolygon(self):
         mp = {
             "type": "MultiPolygon",
             "coordinates": [self.polygon['coordinates'], self.polygon['coordinates']]
         }
-
         g = fionautil.round.geometry(mp, 3)
-        self.assertSequenceEqual(g['coordinates'][0][0][0], [100.111, 0.0])
+
+        try:
+            coordinates = g['coordinates'][0][0][0].tolist()
+        except AttributeError:
+            coordinates = g['coordinates'][0][0][0]
+
+        self.assertSequenceEqual(coordinates, [100.111, 0.0])
 
     def testRoundFeature(self):
         feat = {
@@ -42,17 +62,23 @@ class RoundTestCase(unittest.TestCase):
             "properties": {"foo": "bar"}
         }
         f = fionautil.round.feature(feat, 4)
-        self.assertSequenceEqual(f['geometry']['coordinates'][0][0], [100.1111, 0.0])
+
+        try:
+            coordinates = f['geometry']['coordinates'][0][0].tolist()
+        except AttributeError:
+            coordinates = f['geometry']['coordinates'][0][0]
+
+        self.assertSequenceEqual(coordinates, [100.1111, 0.0])
         assert f['properties']['foo'] == 'bar'
 
     def testRoundGenerator(self):
-        coords = enumerate(range(10))
-
-        c = fionautil.round.round_ring(coords, 10)
-        self.assertSequenceEqual(c[0], (0.0, 0.0))
-
         x = (float(x) + 0.555 for x in range(2))
         b = fionautil.round._round_plain(x, 2)
+
+        try:
+            b = b.tolist()
+        except AttributeError:
+            pass
 
         self.assertSequenceEqual(b, (0.56, 1.56))
 
