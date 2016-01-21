@@ -6,27 +6,27 @@ except ImportError:
 
 
 def geometry(geom, factor=1):
-    coordinates = geom['coordinates']
+    g = dict(geom.items())
 
     if geom['type'] == 'MultiPolygon':
-        c = [scale_rings(rings, factor) for rings in coordinates]
+        g['coordinates'] = [scale_rings(rings, factor) for rings in geom['coordinates']]
 
     elif geom['type'] in ('Polygon', 'MultiLineString'):
-        c = scale_rings(coordinates, factor)
+        g['coordinates'] = scale_rings(geom['coordinates'], factor)
 
     elif geom['type'] in ('MultiPoint', 'LineString'):
-        c = scale(coordinates, factor)
+        g['coordinates'] = scale(geom['coordinates'], factor)
 
     elif geom['type'] == 'Point':
-        c = scale(coordinates, factor)
+        g['coordinates'] = scale(geom['coordinates'], factor)
+
+    elif geom['type'] == 'GeometryCollection':
+        g['geometries'] = [geometry(i) for i in geom['geometries']]
 
     else:
         raise NotImplementedError("Unknown geometry type")
 
-    return {
-        'type': geom['type'],
-        'coordinates': c
-    }
+    return g
 
 
 def scale_rings(rings, factor=1):

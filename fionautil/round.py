@@ -48,6 +48,9 @@ def geometry(geom, precision):
     elif geom['type'] == 'MultiPolygon':
         geom['coordinates'] = [round_ringlist(r, precision) for r in geom['coordinates']]
 
+    elif geom['type'] == 'GeometryCollection':
+        geom['geometries'] = [geometry(g, precision) for g in geom['geometries']]
+
     return geom
 
 def feature(feat, precision):

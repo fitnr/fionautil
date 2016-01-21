@@ -118,6 +118,11 @@ def explodesegments(geometry):
                 for i, point in enumerate(ring[:-1]):
                     yield point, ring[i + 1]
 
+    elif geometry['type'] == 'GeometryCollection':
+        for g in geometry['geometries']:
+            for i, j in explodesegments(g):
+                yield i, j
+
     else:
         raise ValueError("Unknown or invalid geometry type: {}".format(geometry['type']))
 
@@ -136,6 +141,12 @@ def exploderings(geometry):
         for poly in geometry['coordinates']:
             for ring in poly:
                 yield ring
+
+    elif geometry['type'] == 'GeometryCollection':
+        for g in geometry['geometries']:
+            for ring in exploderings(g):
+                yield ring
+
     else:
         raise ValueError("Unkown geometry type: {}".format(geometry['type']))
 
