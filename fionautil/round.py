@@ -27,7 +27,7 @@ def geometry(geom, precision):
         c = np.array(geom['coordinates'])
         g['coordinates'] = np.round(c, precision)
 
-    except (AttributeError, KeyError, NameError):
+    except (AttributeError, KeyError, TypeError, NameError):
 
         if geom['type'] == 'Point':
             g['coordinates'] = _round(geom['coordinates'][:], precision)
