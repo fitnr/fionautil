@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from . import measure
+from .round import geometry as roundgeometry
 from .coords import roundring, roundpolyring
 
 __all__ = [
@@ -168,24 +169,3 @@ def countsegments(geometry):
     else:
         return sum(len(ring) - 1 for ring in exploderings(geometry))
 
-
-def roundgeometry(geometry, precision=None):
-    '''Round all the coordinates in a geometry to a given precision. Defaults to 5.'''
-    precision = 5 if precision is None else precision
-
-    if geometry['type'] == 'Point':
-        geometry['coordinates'] = roundring([geometry['coordinates']], precision).pop(0)
-
-    elif geometry['type'] in ('LineString', 'MultiPoint'):
-        geometry['coordinates'] = roundring(geometry['coordinates'], precision)
-
-    elif geometry['type'] in ('MultiLineString', 'Polygon'):
-        geometry['coordinates'] = roundpolyring(geometry['coordinates'], precision)
-
-    elif geometry['type'] == 'MultiPolygon':
-        geometry['coordinates'] = [roundpolyring(pr, precision) for pr in geometry['coordinates']]
-
-    else:
-        raise ValueError("Unknown or invalid geometry type: {}".format(geometry['type']))
-
-    return geometry

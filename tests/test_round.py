@@ -1,5 +1,9 @@
 import unittest
 import fionautil.round
+try:
+    import numpy as np
+except ImportError:
+    pass
 
 
 class RoundTestCase(unittest.TestCase):
@@ -73,7 +77,7 @@ class RoundTestCase(unittest.TestCase):
 
     def testRoundGenerator(self):
         x = (float(x) + 0.555 for x in range(2))
-        b = fionautil.round._round_plain(x, 2)
+        b = fionautil.round._round(x, 2)
 
         try:
             b = b.tolist()
@@ -82,6 +86,15 @@ class RoundTestCase(unittest.TestCase):
 
         self.assertSequenceEqual(b, (0.56, 1.56))
 
+    def testRoundListIfNumpy(self):
+        try:
+            np
+        except NameError:
+            return
+
+        result = fionautil.round.geometry(self.polygon, 0)
+
+        self.assertSequenceEqual(result['coordinates'][0][0].tolist(), [100.0, 0.0])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,4 @@
+from .round import round_ring as roundring
 
 def max_x(coords):
     return max((c[0] for c in coords))
@@ -18,11 +19,6 @@ def segmentize(ring):
 def bounds(ring):
     '''Return minimum bounding rectangle for a ring'''
     return min_x(ring), min_y(ring), max_x(ring), max_y(ring)
-
-def roundring(ring, precision=None):
-    precision = 5 if precision is None else precision
-
-    return [(round(x, precision), round(y, precision)) for x, y in ring]
 
 def roundpolyring(polyring, precision=None):
     return [roundring(ring, precision) for ring in polyring]
