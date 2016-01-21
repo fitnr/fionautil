@@ -19,6 +19,10 @@ def round_ring(ring, precision):
 def geometry(geom, precision):
     g = dict(geom.items())
 
+    if geom['type'] == 'GeometryCollection':
+        g['geometries'] = [geometry(x, precision) for x in geom['geometries']]
+        return g
+
     try:
         c = np.array(geom['coordinates'])
         g['coordinates'] = np.round(c, precision)
@@ -36,9 +40,6 @@ def geometry(geom, precision):
 
         elif geom['type'] == 'MultiPolygon':
             g['coordinates'] = [[round_ring(r, precision) for r in rings] for rings in geom['coordinates'][:]]
-
-        elif geom['type'] == 'GeometryCollection':
-            g['geometries'] = [geometry(g, precision) for g in geom['geometries']]
 
     return g
 
