@@ -14,19 +14,31 @@ class GeometryTestCase(unittest.TestCase):
 
     def testRoundGeometry(self):
         z = fionautil.geometry.roundgeometry(self.linestring, 0)
-        assert z['coordinates'][0] == tuple(round(i, 0) for i in self.linestring['coordinates'][0])
+        fixture = tuple(round(i, 0) for i in self.linestring['coordinates'][0])
+        try:
+            assert z['coordinates'][0] == fixture
+        except ValueError:
+            self.assertSequenceEqual(z['coordinates'][0].tolist(), fixture)
 
         y = fionautil.geometry.roundgeometry(self.polygon, 0)
-        assert y['coordinates'][0][0] == tuple(round(i, 0) for i in self.polygon['coordinates'][0][0])
+        fixture = tuple(round(i, 0) for i in self.polygon['coordinates'][0][0])
+        try:
+            assert y['coordinates'][0][0] == fixture
+        except ValueError:
+            self.assertSequenceEqual(y['coordinates'][0][0].tolist(), fixture)
 
         x = fionautil.geometry.roundgeometry(self.multipolygon, 0)
-        self.assertEqual(x['coordinates'][0][0][0], tuple(round(i, 0) for i in self.multipolygon['coordinates'][0][0][0]))
+        fixture = tuple(round(i, 0) for i in self.multipolygon['coordinates'][0][0][0])
+        try:
+            self.assertSequenceEqual(x['coordinates'][0][0][0], fixture)
+        except ValueError:
+            self.assertSequenceEqual(x['coordinates'][0][0][0].tolist(), fixture)
 
         w = fionautil.geometry.roundgeometry({'type': 'Point', 'coordinates': [12.345, 67.890]}, 0)
-        self.assertEqual(w['coordinates'], (12., 68.0))
-
-        with self.assertRaises(ValueError):
-            fionautil.geometry.roundgeometry({'type': 'NewType'})
+        try:
+            self.assertSequenceEqual(w['coordinates'], (12., 68.0))
+        except ValueError:
+            self.assertSequenceEqual(w['coordinates'].tolist(), (12., 68.0))
 
     def test_explodepoints_polygon(self):
         explode = fionautil.geometry.explodepoints(self.polygon)
