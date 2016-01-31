@@ -14,7 +14,7 @@ def _round(pt, precision):
 
 
 def round_ring(ring, precision):
-    return [_round(pt, precision) for pt in ring]
+    return [_round(tuple(pt), precision) for pt in ring]
 
 def geometry(geom, precision):
     g = dict(geom.items())
@@ -30,16 +30,16 @@ def geometry(geom, precision):
     except (AttributeError, KeyError, TypeError, NameError):
 
         if geom['type'] == 'Point':
-            g['coordinates'] = _round(geom['coordinates'][:], precision)
+            g['coordinates'] = _round(geom['coordinates'], precision)
 
         elif geom['type'] in ('MultiPoint', 'LineString'):
-            g['coordinates'] = round_ring(geom['coordinates'][:], precision)
+            g['coordinates'] = round_ring(geom['coordinates'], precision)
 
         elif geom['type'] in ('MultiLineString', 'Polygon'):
-            g['coordinates'] = [round_ring(r, precision) for r in geom['coordinates'][:]]
+            g['coordinates'] = [round_ring(r, precision) for r in geom['coordinates']]
 
         elif geom['type'] == 'MultiPolygon':
-            g['coordinates'] = [[round_ring(r, precision) for r in rings] for rings in geom['coordinates'][:]]
+            g['coordinates'] = [[round_ring(r, precision) for r in rings] for rings in geom['coordinates']]
 
     return g
 
