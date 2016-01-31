@@ -1,7 +1,7 @@
 from __future__ import print_function
 import itertools
-import fiona
 import sys
+import fiona
 from pyproj import Proj
 from .geometry import disjointed
 try:
@@ -38,28 +38,28 @@ def fiter(filename):
 
 
 def _fionaiter(iterfunc):
-    def _iter(func, filename, *args):
+    def _iter(func, filename, *args, **kwargs):
         with fiona.drivers():
             with fiona.open(filename, "r") as layer:
-                for feature in iterfunc(func, layer, *args):
+                for feature in iterfunc(func, layer, *args, **kwargs):
                     yield feature
     return _iter
 
 
 @_fionaiter
-def ffilter(func, layer):
-    return iter(f for f in layer if func(f))
+def ffilter(func, layer, *args, **kwargs):
+    return iter(f for f in layer if func(f, *args, **kwargs))
 
 
 @_fionaiter
-def ffilterfalse(func, layer):
-    return iter(f for f in layer if not func(f))
+def ffilterfalse(func, layer, *args, **kwargs):
+    return iter(f for f in layer if not func(f, *args, **kwargs))
 
 
 @_fionaiter
-def fmap(func, layer):
+def fmap(func, layer, *args, **kwargs):
     '''Yield features in a fiona layer, applying func to each'''
-    return iter(func(f) for f in layer)
+    return iter(func(f, *args, **kwargs) for f in layer)
 
 
 def freduce(func, filename, initializer=None):
