@@ -8,6 +8,7 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
+import collections
 from unittest import TestCase as PythonTestCase
 import unittest.main
 import os.path
@@ -28,6 +29,13 @@ class TestLayer(PythonTestCase):
         test = lambda f: f['properties']['id'] == 3
         assert len(list(fionautil.layer.ffilterfalse(test, shp))) == 3
         assert len(list(fionautil.layer.ffilterfalse(test, shp))) == 3
+
+    def test_fiter(self):
+        s = fionautil.layer.fiter(shp)
+        d = collections.deque(s, maxlen=0)
+        assert len(d) == 0
+        assert next(fionautil.layer.fiter(geojson))
+
 
     def test_fmap(self):
         def func(f):
@@ -71,6 +79,14 @@ class TestLayer(PythonTestCase):
         one = fionautil.layer.find(geojson, 'id', 1)
         assert one['properties']['id'] == 1
         assert two['properties']['id'] == 2
+
+    def test_layer_args(self):
+        def func(f, n):
+            f['properties']['n'] = n
+            return f
+
+        assert next(fionautil.layer.fmap(func, shp, n='meow')).get('properties').get('n') == 'meow'
+        assert next(fionautil.layer.fmap(func, geojson, n='meow')).get('properties').get('n') == 'meow'
 
 
 if __name__ == '__main__':
