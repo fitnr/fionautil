@@ -14,6 +14,11 @@ def distance(x0, y0, x1, y1, latlong=True):
     return d
 
 
+def distance_points(p0, p1, latlong=True):
+    '''distance (in m) between two points'''
+    return distance(p0[0], p0[1], p1[0], p1[1], latlong)
+
+
 def _projected_azimuth(x0, y0, x1, y1):
     '''The angle of a line between two points on a cartesian plane. Always clockwise and in degrees'''
     if y0 == y1:
@@ -41,6 +46,10 @@ def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, latlong=True):
         az = math.radians(az)
 
     return az * (1 if clockwise else -1)
+
+
+def azimuth_points(p0, p1, radians=False, clockwise=None, latlong=True):
+    return azimuth(p0[0], p0[1], p1[0], p1[1], radians, clockwise, latlong)
 
 
 def signed_area(coords):
@@ -76,6 +85,10 @@ def azimuth_distance(x0, y0, x1, y1, latlong=True):
         dist = distance(x0, y0, x1, y1, latlong=latlong)
 
     return az, dist
+
+
+def azimuth_distance_points(p0, p1, latlong=True):
+    return azimuth_distance(p0[0], p0[1], p1[0], p1[1], latlong)
 
 
 def det(a, b):
