@@ -9,11 +9,19 @@ try:
 except ImportError:
     pass
 
+
 def meta(filename):
     '''Return crs and schema for a layer'''
     with fiona.drivers():
         with fiona.open(filename, "r") as layer:
-            return layer.meta
+            m = {
+                'bounds': layer.bounds,
+                'path': layer.path,
+                'name': layer.name,
+                'encoding': layer.encoding
+            }
+            m.update(layer.meta)
+            return m
 
 
 def bounds(filename):

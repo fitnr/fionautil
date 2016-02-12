@@ -16,7 +16,7 @@ from . import coords
 from . import round
 from . import scale
 
-__version__ = '0.4.9'
+__version__ = '0.4.10'
 
 __all__ = [
     'coords',
