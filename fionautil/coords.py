@@ -38,4 +38,4 @@ def centerbounds(bounds):
 
 def cornerbounds(bounds):
     '''Returns the four corners of a bounding box'''
-    return (bounds[0], bounds[1]), (bounds[0], bounds[3]), (bounds[1], bounds[2]), (bounds[2], bounds[3])
+    return (bounds[0], bounds[1]), (bounds[0], bounds[3]), (bounds[2], bounds[3]), (bounds[2], bounds[1])

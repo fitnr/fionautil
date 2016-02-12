@@ -38,5 +38,9 @@ class TestCoords(PythonTestCase):
     def test_bounds(self):
         assert coords.bounds(self.coords) == (-2, -1, 10, 14)
 
+    def test_cornerbounds(self):
+        b = (0, 0, 6, 8)
+        self.assertSequenceEqual(coords.cornerbounds(b), [(0, 0), (0, 8), (6, 8), (6, 0)])
+
 if __name__ == '__main__':
     unittest.main()
