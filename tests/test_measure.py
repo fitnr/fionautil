@@ -56,7 +56,6 @@ class TestMeasure(PythonTestCase):
         zcoords = [(0, 0, 1), (1, 0, 0), (1, 1, 0), (0, 1, 0), (0, 0, 0)]
         assert measure.signed_area(zcoords) == 1.0
 
-
     def testAzimuthDistance(self):
         self.assertEqual(measure.azimuth_distance(0, 0, 90, 0), (90, 10018754.171394622))
         self.assertEqual(measure.azimuth_distance(1, 0, 0, 0, latlong=False), (-270, 1))
@@ -113,7 +112,6 @@ class TestMeasure(PythonTestCase):
         assert measure.intersect(k, m) is None
         assert measure.intersect(k, n) == (9, 10)
 
-
     def testIntersectionDet(self):
         minx, miny, maxx, maxy = 0, 0, 10, 10
         edges = (
@@ -131,6 +129,7 @@ class TestMeasure(PythonTestCase):
 
         inters = [measure.intersect(e, a, detm=d) for e, d in zip(edges, dets)]
         self.assertListEqual(inters, [None, (9, 10), None, None])
+
 
 if __name__ == '__main__':
     unittest.main()
