@@ -44,7 +44,8 @@ Most of these tools that mimic builtin python itertools.
   * fslice
   * fzip
   * length Total length of linear features in a file's native projection or the given Proj object
-  * meta (records a layers meta attribute)
+  * meta (returns a layer's meta attribute)
+  * meta_complete (returns the meta attribute with addional metadata, e.g. bounds)
   * bounds (returns a layer's bounds)
   * find (return a feature that matches a particular key=value)
 

@@ -19,7 +19,7 @@ shapely = 'shapely>=1.5.0,<2.0'
 
 setup(
     name='fionautil',
-    version='0.4.10',
+    version='0.4.11',
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',

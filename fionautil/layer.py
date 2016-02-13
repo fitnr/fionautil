@@ -14,6 +14,13 @@ def meta(filename):
     '''Return crs and schema for a layer'''
     with fiona.drivers():
         with fiona.open(filename, "r") as layer:
+            return layer.meta
+
+
+def meta_complete(filename):
+    '''Return crs and schema for a layer, as well as additional metadata.'''
+    with fiona.drivers():
+        with fiona.open(filename, "r") as layer:
             m = {
                 'bounds': layer.bounds,
                 'path': layer.path,
