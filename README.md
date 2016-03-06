@@ -1,8 +1,8 @@
 ### fionautil
 
-Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fiona/1.5.0). Some features are shorthand for [pyproj](https://pypi.python.org/pypi/pyproj) features, or add in support for projections.
+Utilities for working with geodata with [Fiona](https://pypi.python.org/pypi/Fiona/1.5.0).
 
-By defauly, the only prerequisites are `pyproj` and Fiona itself.
+By default, the only prerequisite is Fiona itself.
 
 By default, the package installs without shapely. A small number of functions, marked below, do require shapely. To use these function, install with `pip install fionautil[functionname]` or just separately install shapely.
 

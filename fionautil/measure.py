@@ -1,14 +1,19 @@
 from __future__ import division
 import math
-import pyproj
 
-WGS84 = pyproj.Geod(ellps='WGS84')
-
+try:
+    import pyproj
+    WGS84 = pyproj.Geod(ellps='WGS84')
+except ImportError:
+    pass
 
 def distance(x0, y0, x1, y1, longlat=True):
     '''distance (in m) between two pairs of points'''
     if longlat:
-        _, _, d = WGS84.inv(x0, y0, x1, y1)
+        try:
+            _, _, d = WGS84.inv(x0, y0, x1, y1)
+        except NameError:
+            raise NotImplementedError("Distance of long/lat coordinates requires pyproj.")
     else:
         d = math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2)
     return d
@@ -52,7 +57,11 @@ def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, longlat=True):
     '''
     if longlat:
         # this is always in angles
-        az, _, _ = WGS84.inv(x0, y0, x1, y1)
+        try:
+            az, _, _ = WGS84.inv(x0, y0, x1, y1)
+        except NameError:
+            raise NotImplementedError("Distance of long/lat coordinates requires pyproj.")
+
     else:
         az = _projected_azimuth(x0, y0, x1, y1)
 
@@ -93,7 +102,11 @@ def counterclockwise(coords):
 def azimuth_distance(x0, y0, x1, y1, longlat=True):
     '''Azimuth and distance between two points'''
     if longlat:
-        az, _, dist = WGS84.inv(x0, y0, x1, y1)
+        try:
+            az, _, dist = WGS84.inv(x0, y0, x1, y1)
+        except NameError:
+            raise NotImplementedError("Distance of long/lat coordinates requires pyproj.")
+
     else:
         az = azimuth(x0, y0, x1, y1, longlat=longlat)
         dist = distance(x0, y0, x1, y1, longlat=longlat)

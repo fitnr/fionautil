@@ -40,15 +40,16 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'pyproj>=1.9.5,<1.10',
         'fiona>=1.6.3,<2.0',
     ],
 
     extras_require={
         'shapify': [shapely],
+        'shape': [shapely],
         'length': [shapely],
         'dissolve': [shapely],
-        'speed': ['numpy>1.9']
+        'speed': ['numpy>1.9'],
+        'azimuth': ['pyproj>=1.9.5,<1.10']
     },
 
     test_suite='tests',

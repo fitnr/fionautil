@@ -25,7 +25,7 @@ before_install:
 
 install:
  - make
- - python setup.py --quiet install
+ - pip install -e .[azimuth,shape]
 
 script:
  - python setup.py test
