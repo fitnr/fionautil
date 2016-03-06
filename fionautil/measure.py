@@ -23,7 +23,7 @@ def _projected_azimuth(x0, y0, x1, y1):
     '''The angle of a line between two points on a cartesian plane. Always clockwise and in degrees'''
     if y0 == y1:
         if x0 == x1:
-            az = 0
+            az = 0.
         elif x1 > x0:
             az = math.pi / 2
         else:
@@ -35,7 +35,21 @@ def _projected_azimuth(x0, y0, x1, y1):
 
 
 def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, longlat=True):
-    '''azimuth between 2 geographic points'''
+    '''
+    Measure the azimuth between 2 geographic points
+
+    Args:
+        x0 (float): first x coordinate.
+        y0 (float): first y coordinate.
+        x1 (float): second x coordinate.
+        y1 (float): second y coordinate.
+        radians (bool): Return in radians.
+        clockwise (bool): Return with clockwise coordinates.
+        longlat (bool): Input is in longitude-latitude, rather than projected.
+
+    Returns:
+        float
+    '''
     if longlat:
         # this is always in angles
         az, _, _ = WGS84.inv(x0, y0, x1, y1)
@@ -133,10 +147,12 @@ def intersect(linem, linen, detm=None):
     '''
     Check if two line segments intersect. Returns None or the intersection.
     If lines are coincident, returns one of the midpoints.
-    linem sequence line segment 1, e.g. ((0, 0), (1, 1))
-    linen sequence line segment 2, e.g. [[0, 1], [0, 1]]
-    det float The determinant of linem. Precalculating might be useful if
-               calculating intersection with the same segment many times
+
+    Args:
+        linem (Sequence): line segment 1, e.g. ((0, 0), (1, 1))
+        linen (Sequence): line segment 2, e.g. [[0, 1], [0, 1]]
+        det (float): The determinant of linem. Precalculating might be useful if
+                   calculating intersection with the same segment many times
     '''
     mx, my = zip(*linem)
     nx, ny = zip(*linen)
@@ -169,8 +185,8 @@ def intersect(linem, linen, detm=None):
         x = det((detm, detn), xD) / div
         y = det((detm, detn), yD) / div
 
-        if (intersectingbounds(mbrm, (x, y, x, y))
-                and intersectingbounds(mbrn, (x, y, x, y))):
+        if (intersectingbounds(mbrm, (x, y, x, y)) and
+                intersectingbounds(mbrn, (x, y, x, y))):
             return x, y
         else:
             return None

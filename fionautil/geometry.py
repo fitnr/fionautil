@@ -2,7 +2,6 @@
 from __future__ import print_function
 from . import measure
 from .round import geometry as roundgeometry
-from .coords import roundring, roundpolyring
 
 __all__ = [
     'endpoints',
@@ -53,11 +52,18 @@ def bbox(geometry):
 
 def azimuth(geometry, crs=None, radians=None, clockwise=None, longlat=None):
     '''
-    return the azimuth between the start and end of a polyline geometry
-    :geometry object A geojson-like geometry object
-    :projection Proj
-    :radians bool
-    :clockwise bool
+    Get the azimuth between the start and end points of a polyline geometry.
+
+    Args:
+        geometry (dict): A geojson-like geometry object
+        crs (dict): A fiona-style mapping
+        radians (bool): Output in radians
+        clockwise (bool): Use clockwise orientation.
+        longlat (bool): geometry's coordinates are in long-lat form.
+
+    Returns:
+        (float) The angle (from north) described when one is standing at
+                the start of the feature and pointing to the end.
     '''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
@@ -96,7 +102,6 @@ def explodepoints(geometry):
             for point in ring:
                 yield point
 
-
 def explodesegments(geometry):
     '''Generator that returns every line segment of a geometry'''
     # Sure, could just use explodepoints, but isn't that a
@@ -122,12 +127,11 @@ def explodesegments(geometry):
                 yield i, j
 
     else:
-        raise ValueError("Unknown or invalid geometry type: {}".format(geometry['type']))
+        raise ValueError("Unknown or invalid geometry type: {type}".format(**geometry))
 
 
 def exploderings(geometry):
-    '''Generator that returns every ring of a geometry.
-    A ring is a list of points'''
+    '''Generator that returns every ring of a geometry (a ring is a list of points).'''
     if geometry['type'] in ('MultiLineString', 'Polygon'):
         for ring in geometry['coordinates']:
             yield ring
@@ -146,7 +150,7 @@ def exploderings(geometry):
                 yield ring
 
     else:
-        raise ValueError("Unkown geometry type: {}".format(geometry['type']))
+        raise ValueError("Unknown or invalid geometry type: {type}".format(**geometry))
 
 
 def countpoints(geometry):
@@ -165,4 +169,3 @@ def countsegments(geometry):
 
     else:
         return sum(len(ring) - 1 for ring in exploderings(geometry))
-
