@@ -17,9 +17,12 @@ except IOError:
 
 shapely = 'shapely>=1.5.0,<2.0'
 
+with open('fionautil/__init__.py') as i:
+    version = next(r for r in i.readlines() if '__version__' in r).split('=')[1].strip('"\' \n')
+
 setup(
     name='fionautil',
-    version='0.4.11',
+    version=version,
     description='helpful utilities for working with geodata with Fiona',
     long_description=readme,
     keywords='GIS',
