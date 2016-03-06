@@ -51,7 +51,7 @@ def bbox(geometry):
     return min(x), min(y), max(x), max(y)
 
 
-def azimuth(geometry, projection=None, radians=False, clockwise=False):
+def azimuth(geometry, crs=None, radians=None, clockwise=None, longlat=None):
     '''
     return the azimuth between the start and end of a polyline geometry
     :geometry object A geojson-like geometry object
@@ -61,20 +61,17 @@ def azimuth(geometry, projection=None, radians=False, clockwise=False):
     '''
 
     if geometry['type'] not in ('LineString', 'MultiLineString'):
-        raise ValueError("This only works with PolyLine layers, this is: {}".format(geometry['type']))
+        raise ValueError("This only works with PolyLine layers, this is a {type}".format(**geometry))
+
+    crs = '' or crs
+    if longlat is None and 'proj' in crs:
+        longlat = crs['proj'] == 'longlat'
 
     first, last = endpoints(geometry)
-    latlong = projection.is_latlong()
 
-    if latlong:
-        x0, y0 = projection(*first, inverse=True)
-        x1, y1 = projection(*last, inverse=True)
+    points = first + last
 
-    else:
-        x0, y0 = first
-        x1, y1 = last
-
-    return measure.azimuth(x0, y0, x1, y1, radians=radians, clockwise=clockwise, latlong=latlong)
+    return measure.azimuth(*points, radians=radians, clockwise=clockwise, longlat=longlat)
 
 
 def disjointed(shapes):

@@ -5,18 +5,18 @@ import pyproj
 WGS84 = pyproj.Geod(ellps='WGS84')
 
 
-def distance(x0, y0, x1, y1, latlong=True):
+def distance(x0, y0, x1, y1, longlat=True):
     '''distance (in m) between two pairs of points'''
-    if latlong:
+    if longlat:
         _, _, d = WGS84.inv(x0, y0, x1, y1)
     else:
         d = math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2)
     return d
 
 
-def distance_points(p0, p1, latlong=True):
+def distance_points(p0, p1, longlat=True):
     '''distance (in m) between two points'''
-    return distance(p0[0], p0[1], p1[0], p1[1], latlong)
+    return distance(p0[0], p0[1], p1[0], p1[1], longlat)
 
 
 def _projected_azimuth(x0, y0, x1, y1):
@@ -34,9 +34,9 @@ def _projected_azimuth(x0, y0, x1, y1):
     return math.degrees(az)
 
 
-def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, latlong=True):
+def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, longlat=True):
     '''azimuth between 2 geographic points'''
-    if latlong:
+    if longlat:
         # this is always in angles
         az, _, _ = WGS84.inv(x0, y0, x1, y1)
     else:
@@ -48,8 +48,8 @@ def azimuth(x0, y0, x1, y1, radians=False, clockwise=None, latlong=True):
     return az * (1 if clockwise else -1)
 
 
-def azimuth_points(p0, p1, radians=False, clockwise=None, latlong=True):
-    return azimuth(p0[0], p0[1], p1[0], p1[1], radians, clockwise, latlong)
+def azimuth_points(p0, p1, radians=False, clockwise=None, longlat=True):
+    return azimuth(p0[0], p0[1], p1[0], p1[1], radians, clockwise, longlat)
 
 
 def signed_area(coords):
@@ -76,19 +76,19 @@ def counterclockwise(coords):
     return signed_area(coords) >= 0
 
 
-def azimuth_distance(x0, y0, x1, y1, latlong=True):
+def azimuth_distance(x0, y0, x1, y1, longlat=True):
     '''Azimuth and distance between two points'''
-    if latlong:
+    if longlat:
         az, _, dist = WGS84.inv(x0, y0, x1, y1)
     else:
-        az = azimuth(x0, y0, x1, y1, latlong=latlong)
-        dist = distance(x0, y0, x1, y1, latlong=latlong)
+        az = azimuth(x0, y0, x1, y1, longlat=longlat)
+        dist = distance(x0, y0, x1, y1, longlat=longlat)
 
     return az, dist
 
 
-def azimuth_distance_points(p0, p1, latlong=True):
-    return azimuth_distance(p0[0], p0[1], p1[0], p1[1], latlong)
+def azimuth_distance_points(p0, p1, longlat=True):
+    return azimuth_distance(p0[0], p0[1], p1[0], p1[1], longlat)
 
 
 def det(a, b):

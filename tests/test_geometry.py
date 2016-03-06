@@ -1,6 +1,7 @@
 import unittest
 import fionautil.geometry
 
+
 class GeometryTestCase(unittest.TestCase):
 
     def setUp(self):

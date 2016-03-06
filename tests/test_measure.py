@@ -26,12 +26,12 @@ class TestMeasure(PythonTestCase):
         self.assertEqual(measure.distance(0, 0, 6, 0, True), 667916.9447596414)
 
     def testAzimuth(self):
-        self.assertEqual(measure.azimuth(0, 0, 0, 0, clockwise=True, latlong=False), 0)
-        self.assertEqual(measure.azimuth(1, 0, 0, 1, clockwise=True, latlong=False), -45)
-        self.assertEqual(measure.azimuth(0, 1, 1, 0, clockwise=True, latlong=False), 135)
-        self.assertEqual(measure.azimuth(0, 0, 0, 1, clockwise=True, latlong=False), 0)
-        self.assertEqual(measure.azimuth(0, 0, 1, 0, clockwise=False, latlong=False), -90)
-        self.assertEqual(measure.azimuth(1, 0, 0, 0, clockwise=True, latlong=False), 270)
+        self.assertEqual(measure.azimuth(0, 0, 0, 0, clockwise=True, longlat=False), 0)
+        self.assertEqual(measure.azimuth(1, 0, 0, 1, clockwise=True, longlat=False), -45)
+        self.assertEqual(measure.azimuth(0, 1, 1, 0, clockwise=True, longlat=False), 135)
+        self.assertEqual(measure.azimuth(0, 0, 0, 1, clockwise=True, longlat=False), 0)
+        self.assertEqual(measure.azimuth(0, 0, 1, 0, clockwise=False, longlat=False), -90)
+        self.assertEqual(measure.azimuth(1, 0, 0, 0, clockwise=True, longlat=False), 270)
 
         self.assertEqual(measure.azimuth(0, 0, 0, 90), -0.0)
         self.assertEqual(measure.azimuth(0, 0, 90, 0), -90.0)
@@ -58,7 +58,7 @@ class TestMeasure(PythonTestCase):
 
     def testAzimuthDistance(self):
         self.assertEqual(measure.azimuth_distance(0, 0, 90, 0), (90, 10018754.171394622))
-        self.assertEqual(measure.azimuth_distance(1, 0, 0, 0, latlong=False), (-270, 1))
+        self.assertEqual(measure.azimuth_distance(1, 0, 0, 0, longlat=False), (-270, 1))
 
     def testDet(self):
         assert measure.det((1, 2), (3, 4)) == -2
