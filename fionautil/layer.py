@@ -2,12 +2,12 @@ from __future__ import print_function
 import itertools
 import sys
 import fiona
-from pyproj import Proj
-from .geometry import disjointed
+import fiona.transform
 try:
-    from shapely.geometry import shape
+    from shapely.geometry import shape as shapelyshape
 except ImportError:
     pass
+from .geometry import disjointed
 
 
 def meta(filename):
@@ -121,45 +121,46 @@ def fzip(*filenames):
                 h.close()
 
 
-def length(filename, proj=None):
-    '''Get the length of a geodata file in its
-    native projection or the given Proj object'''
+def shapes(filename, crs=None):
+    '''
+    Generator that yields a Shapely shape for every feature in a layer.
+    '''
     try:
-        shape
+        shapelyshape
     except NameError:
         raise NotImplementedError("length require shapely")
 
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
-            if not proj:
-                proj = Proj(*layer.crs)
+            if crs is not None:
+                def _geom(feature):
+                    return fiona.transform.transform_geom(layer.crs, crs, feature['geometry'])
+            else:
+                def _geom(feature):
+                    return feature['geometry']
 
-            return sum(shape({'type': feature['geometry']['type'],
-                              'coordinates': zip(*proj(*feature['geometry']['coordinates']))}).length
-                       for feature in layer)
+            for feature in layer:
+                yield shapelyshape(_geom(feature))
 
 
-def perimeter(filename, proj=None):
+def length(filename, crs=None):
+    '''Get the length of a geodata file in its
+    native projection or the given crs mapping'''
+    geometries = shapes(filename, crs)
+    return sum(x.length for x in geometries)
+
+
+def perimeter(filename, crs=None):
     '''Get perimeter of all features in a geodata file in its
-    native projection or the given Proj object'''
-    try:
-        shape
-    except NameError:
-        raise NotImplementedError("perimeter require shapely")
-
-    with fiona.drivers():
-        with fiona.open(filename, 'r') as layer:
-            if not proj:
-                proj = Proj(*layer.crs)
-
-            return sum(shape({'type': feature['geometry']['type'],
-                              'coordinates': zip(*proj(*feature['geometry']['coordinates']))}).boundary.length
-                       for feature in layer)
+    native projection or the given crs mapping'''
+    geometries = shapes(filename, crs)
+    return sum(x.boundary.length for x in geometries)
 
 
 def find(filename, key, value):
     '''Special case of ffilter: return the first feature where key==value'''
-    test = lambda f: f['properties'][key] == value
+    def test(f):
+        return f['properties'][key] == value
     return next(ffilter(test, filename))
 
 
@@ -180,7 +181,7 @@ def dissolve(sourcefile, sinkfile, key, unsplit=None):
 
                 for _, feat in source.items():
                     fkey = feat['properties'][key]
-                    fshape = shape(feat['geometry'])
+                    fshape = shapelyshape(feat['geometry'])
 
                     if fkey in gotkeys:
                         gotkeys[fkey][0] = gotkeys[fkey][0].union(fshape)
