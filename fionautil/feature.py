@@ -1,6 +1,6 @@
 from __future__ import print_function
+import fiona
 import fiona.transform
-from fionautil import geometry
 try:
     from shapely.geometry import asShape
     from shapely.geometry.linestring import LineString
@@ -31,7 +31,7 @@ def field_contains_test(field_values):
 def overlaps(feature, bbox):
     '''Returns true if feature overlaps bbox (xmin, ymin, xmax, ymax)'''
     xm0, ym0, xM0, yM0 = bbox
-    xm1, ym1, xM1, yM1 = geometry.bbox(feature['geometry'])
+    xm1, ym1, xM1, yM1 = fiona.bounds(feature['geometry'])
     if yM1 < ym0 or yM0 < ym1:
         return False
 

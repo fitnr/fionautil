@@ -22,7 +22,6 @@ By default, the package installs without shapely. A small number of functions, m
   * endpoints (for polyline features)
   * startpoint (for polyline features)
   * endpoint (for polyline features)
-  * bbox
   * azimuth (between the start and end of a polyline)
   * disjointed
   * explodepoints

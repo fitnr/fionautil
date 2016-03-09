@@ -7,7 +7,6 @@ __all__ = [
     'endpoints',
     'startpoint',
     'endpoint',
-    'bbox',
     'azimuth',
     'disjointed',
     'explodepoints',
@@ -42,12 +41,6 @@ def endpoint(geometry):
     '''Return the last point in a linear geometry'''
     _, end = endpoints(geometry)
     return end
-
-
-def bbox(geometry):
-    '''Return the bounds of a geometry (minx, miny, maxx, maxy)'''
-    x, y = zip(*list(explodepoints(geometry)))
-    return min(x), min(y), max(x), max(y)
 
 
 def azimuth(geometry, crs=None, radians=None, clockwise=None, longlat=None):
