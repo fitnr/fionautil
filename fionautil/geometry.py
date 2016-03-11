@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
+# This file is part of fionautil.
+# http://github.com/fitnr/fionautil
+
+# Licensed under the GPLv3 license:
+# http://http://opensource.org/licenses/GPL-3.0
+# Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
+
 from . import measure
 from .round import geometry as roundgeometry
 
@@ -94,6 +100,7 @@ def explodepoints(geometry):
         for ring in exploderings(geometry):
             for point in ring:
                 yield point
+
 
 def explodesegments(geometry):
     '''Generator that returns every line segment of a geometry'''

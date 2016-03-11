@@ -1,4 +1,10 @@
-from __future__ import division
+# This file is part of fionautil.
+# http://github.com/fitnr/fionautil
+
+# Licensed under the GPLv3 license:
+# http://http://opensource.org/licenses/GPL-3.0
+# Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
+
 import math
 
 try:
@@ -30,9 +36,9 @@ def _projected_azimuth(x0, y0, x1, y1):
         if x0 == x1:
             az = 0.
         elif x1 > x0:
-            az = math.pi / 2
+            az = math.pi / 2.
         else:
-            az = 3 * math.pi / 2
+            az = 3 * math.pi / 2.
     else:
         az = math.atan2((x1 - x0), (y1 - y0))
 
@@ -81,14 +87,14 @@ def signed_area(coords):
     indicates a counter-clockwise oriented ring."""
 
     try:
-        xs, ys = map(list, zip(*coords))
+        xs, ys = tuple(map(list, zip(*coords)))
     except ValueError:
         # Attempt to handle a z-dimension
-        xs, ys, _ = map(list, zip(*coords))
+        xs, ys, _ = tuple(map(list, zip(*coords)))
 
     xs.append(xs[1])
     ys.append(ys[1])
-    return sum(xs[i] * (ys[i + 1] - ys[i - 1]) for i in range(1, len(coords))) / 2
+    return sum(xs[i] * (ys[i + 1] - ys[i - 1]) for i in range(1, len(coords))) / 2.
 
 
 def clockwise(coords):
@@ -125,7 +131,7 @@ def det(a, b):
 
 def onsegment(segment, point):
     '''Return True if point lies on segment'''
-    xs, ys = zip(*segment)
+    xs, ys = tuple(zip(*segment))
     pbr = point[0], point[1], point[0], point[1]
 
     if not intersectingbounds((min(xs), min(ys), max(xs), max(ys)), pbr):
@@ -167,8 +173,8 @@ def intersect(linem, linen, detm=None):
         det (float): The determinant of linem. Precalculating might be useful if
                    calculating intersection with the same segment many times
     '''
-    mx, my = zip(*linem)
-    nx, ny = zip(*linen)
+    mx, my = tuple(zip(*linem))
+    nx, ny = tuple(zip(*linen))
 
     mbrm = min(mx), min(my), max(mx), max(my)
     mbrn = min(nx), min(ny), max(nx), max(ny)
@@ -184,7 +190,7 @@ def intersect(linem, linen, detm=None):
     if div == 0:
         try:
             # Check if lines are parallel
-            if (xD[0] == xD[1] and yD[0] == yD[1]) or (yD[0] / xD[0] == yD[1] / xD[1]):
+            if (xD[0] == xD[1] and yD[0] == yD[1]) or (yD[0] / xD[0] == yD[1] / float(xD[1])):
                 return coincidentendpoint(linem, linen)
 
         except ZeroDivisionError:
@@ -195,8 +201,8 @@ def intersect(linem, linen, detm=None):
     else:
         detm = detm or det(*linem)
         detn = det(*linen)
-        x = det((detm, detn), xD) / div
-        y = det((detm, detn), yD) / div
+        x = det((detm, detn), xD) / float(div)
+        y = det((detm, detn), yD) / float(div)
 
         if (intersectingbounds(mbrm, (x, y, x, y)) and
                 intersectingbounds(mbrn, (x, y, x, y))):

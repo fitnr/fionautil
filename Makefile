@@ -17,10 +17,8 @@ cov:
 	coverage html
 
 deploy: README.rst | clean
-	python setup.py register
-	python setup.py sdist
-	rm -rf build
-	python3 setup.py sdist bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel --universal
 	twine upload dist/*
 	git push
 	git push --tags

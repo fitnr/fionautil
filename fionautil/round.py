@@ -1,3 +1,10 @@
+# This file is part of fionautil.
+# http://github.com/fitnr/fionautil
+
+# Licensed under the GPLv3 license:
+# http://http://opensource.org/licenses/GPL-3.0
+# Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
+
 try:
     import numpy as np
 except ImportError:
@@ -15,6 +22,7 @@ def _round(pt, precision):
 
 def round_ring(ring, precision):
     return [_round(tuple(pt), precision) for pt in ring]
+
 
 def geometry(geom, precision):
     g = dict(geom.items())

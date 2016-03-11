@@ -5,11 +5,12 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
 
-from __future__ import print_function
 import itertools
+from functools import reduce
 import sys
 import fiona
 import fiona.transform
+
 try:
     from shapely.geometry import shape as shapelyshape
 except ImportError:

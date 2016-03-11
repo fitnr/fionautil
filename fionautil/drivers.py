@@ -4,6 +4,7 @@
 # Licensed under the GPLv3 license:
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
+
 import os.path
 from fiona import supported_drivers
 

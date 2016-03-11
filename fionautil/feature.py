@@ -1,4 +1,10 @@
-from __future__ import print_function
+# This file is part of fionautil.
+# http://github.com/fitnr/fionautil
+
+# Licensed under the GPLv3 license:
+# http://http://opensource.org/licenses/GPL-3.0
+# Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
+
 import fiona
 import fiona.transform
 try:
