@@ -17,7 +17,6 @@ By default, the package installs without shapely. A small number of functions, m
 
 ### feature
 
-  * overlaps
   * field_contains_test (test if a feature's properties has certain key:value pairs)
   * togeojson (return a geojson-ready object)
   * shapify (requires shapely)
@@ -71,7 +70,9 @@ Most of these tools mimic builtin python itertools.
   * feature
 
 ### scale
+
   Utilities for scaling a feature or geometry by a given constant. Goes faster with Numpy installed.
+
   * geometry
   * scale_rings
   * scale - scales a list of coordinates

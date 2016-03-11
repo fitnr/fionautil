@@ -5,12 +5,8 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
 
-import fiona
-import fiona.transform
 try:
-    from shapely.geometry import asShape
-    from shapely.geometry.linestring import LineString
-    from shapely.geometry.multilinestring import MultiLineString
+    from shapely.geometry import shape
 except ImportError:
     pass
 
@@ -34,19 +30,6 @@ def field_contains_test(field_values):
     return test
 
 
-def overlaps(feature, bbox):
-    '''Returns true if feature overlaps bbox (xmin, ymin, xmax, ymax)'''
-    xm0, ym0, xM0, yM0 = bbox
-    xm1, ym1, xM1, yM1 = fiona.bounds(feature['geometry'])
-    if yM1 < ym0 or yM0 < ym1:
-        return False
-
-    if xM1 < xm0 or xM0 < xm1:
-        return False
-
-    return True
-
-
 def togeojson(typ, coordinates, properties=None):
     '''Return a GeoJSON-ready object given a properties dict, a type and coordinates.'''
     properties = properties or {}
@@ -62,12 +45,12 @@ def togeojson(typ, coordinates, properties=None):
 
 
 def shapify(feature):
-    '''Applies shapely.geometry.asShape to the geometry part of a feature
+    '''Applies shapely.geometry.shape to the geometry part of a feature
     and returns a new feature object with properties intact'''
     try:
         return {
             'properties': feature.get('properties'),
-            'geometry': asShape(feature['geometry'])
+            'geometry': shape(feature['geometry'])
         }
 
     except NameError:
@@ -77,16 +60,11 @@ def shapify(feature):
 def length(feature):
     '''Returns shapely length'''
     try:
-        if feature['geometry']['type'] == 'LineString':
-            geom = LineString(feature['geometry']['coordinates'])
-
-        elif feature['geometry']['type'] == 'MultiLineString':
-            geom = MultiLineString(feature['geometry']['coordinates'])
+        geom = shape(feature['geometry'])
+        return geom.length
 
     except NameError:
         raise NotImplementedError("length requires shapely")
-
-    return geom.length
 
 
 def compound(feature):
@@ -102,12 +80,3 @@ def compound(feature):
         return True
 
     return False
-
-
-def transform(in_crs, out_crs, feature):
-    '''Apply fiona.transform.transform_geom to a feature's geometry,
-    and return the updated feature'''
-    return {
-        'properties': feature.get('properties'),
-        'geometry': fiona.transform.transform_geom(in_crs, out_crs, feature['geometry'])
-    }
