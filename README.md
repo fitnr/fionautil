@@ -8,6 +8,13 @@ By default, the package installs without shapely. A small number of functions, m
 
 ## Contents
 
+### drivers
+
+  Tools for fetching the driver name, given a file suffix
+
+  * from_file
+  * From suffix
+
 ### feature
 
   * overlaps
@@ -33,7 +40,7 @@ By default, the package installs without shapely. A small number of functions, m
 
 ### layer
 
-Most of these tools that mimic builtin python itertools.
+Most of these tools mimic builtin python itertools.
 
   * ffilter
   * ffilterfalse
