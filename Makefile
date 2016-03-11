@@ -23,4 +23,4 @@ deploy: README.rst | clean
 	git push
 	git push --tags
 
-clean: ; rm -rf dist build
+clean:; rm -rf dist build fionautil/*.pyc

@@ -52,7 +52,7 @@ setup(
         'length': [shapely],
         'dissolve': [shapely],
         'speed': ['numpy>1.9'],
-        'azimuth': ['pyproj>=1.9.5,<1.10']
+        'azimuth': ['pyproj>=1.9.5,<1.10'],
     },
 
     test_suite='tests',
