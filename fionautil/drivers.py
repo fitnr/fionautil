@@ -9,7 +9,9 @@ import os.path
 from fiona import supported_drivers
 
 suffix_map = {
+    'csv': 'CSV',
     'gdb': 'FileGDB',
+    'dbf': 'ESRI Shapefile',
     'shp': 'ESRI Shapefile',
     'gtm': 'GPSTrackMaker',
     'dgn': 'DGN',
