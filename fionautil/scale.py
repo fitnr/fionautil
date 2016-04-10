@@ -56,9 +56,9 @@ def scale(coordinates, scalar=1):
 
     except NameError:
         if isinstance(coordinates, tuple):
-            return (coordinates[0] * scalar, coordinates[1] * scalar)
+            return [coordinates[0] * scalar, coordinates[1] * scalar]
 
-        return ((c[0] * scalar, c[1] * scalar) for c in coordinates)
+        return [(c[0] * scalar, c[1] * scalar) for c in coordinates]
 
 
 def feature(feat, factor=1):
