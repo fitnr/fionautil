@@ -12,10 +12,11 @@ import fiona
 import fiona.transform
 
 try:
-    from shapely.geometry import shape as shapelyshape
+    from shapely.geometry import mapping, shape as shapelyshape
 except ImportError:
     pass
 from .geometry import disjointed
+from . import drivers
 
 
 def meta(filename):
@@ -203,3 +204,33 @@ def dissolve(sourcefile, sinkfile, key, unsplit=None):
 
                     else:
                         sink.write(shapelist[0])
+
+
+def create(output, geometries, properties=None, crs=None, driver=None):
+    '''
+    Create a layer from a set of shapely geometries or geometry
+    dicts. Use list of properties (dict) if provided, otherwise an index of list as an ID.'''
+    try:
+        schema = {'geometry': geometries[0].type}
+    except AttributeError:
+        schema = {'geometry': geometries[0]['type']}
+
+    driver = driver or drivers.from_path(output)
+
+    FIELD_MAP = {v: k for k, v in fiona.FIELD_TYPES_MAP.items()}
+
+    if properties:
+        schema['properties'] = {k: FIELD_MAP[type(v)] for k, v in properties[0].items()}
+    else:
+        schema['properties'] = {'id': 'int'}
+        properties = [{'id': x} for x in range(len(geometries))]
+
+    with fiona.drivers():
+        with fiona.open(output, 'w', driver=driver, crs=crs, schema=schema) as f:
+            for geom, props in zip(geometries, properties):
+                try:
+                    feature = {'properties': props, 'geometry': mapping(geom)}
+                except AttributeError:
+                    feature = {'properties': props, 'geometry': geom}
+
+                f.write(feature)
