@@ -36,7 +36,6 @@ class TestLayer(PythonTestCase):
         assert len(d) == 0
         assert next(fionautil.layer.fiter(geojson))
 
-
     def test_fmap(self):
         def func(f):
             f['properties']['cat'] = 'meow'

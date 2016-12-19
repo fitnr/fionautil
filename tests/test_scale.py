@@ -16,6 +16,7 @@ try:
 except ImportError:
     pass
 
+
 class TestCoords(PythonTestCase):
 
     def setUp(self):

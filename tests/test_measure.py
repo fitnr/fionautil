@@ -10,6 +10,7 @@
 
 from unittest import TestCase as PythonTestCase
 import unittest.main
+from functools import partial
 from math import pi
 from os import path
 from fionautil import measure
@@ -130,6 +131,16 @@ class TestMeasure(PythonTestCase):
         inters = [measure.intersect(e, a, detm=d) for e, d in zip(edges, dets)]
         self.assertListEqual(inters, [None, (9, 10), None, None])
 
+    def testBoundsIntersect(self):
+        intersect = partial(measure.intersectingbounds, (0, 0, 1, 1))
+
+        assert intersect((0.5, 0.5, 1.5, 1.5)) is True
+        assert intersect((-1, -1, 0.5, 0.5)) is True
+        assert intersect((0, 0, 1, 1)) is True
+        assert intersect((0, -1, 0, 1)) is True
+        assert intersect((0.25, 1.25, 0.75, 1.75)) is False
+        assert intersect((0.25, 0.25, 0.75, 0.75)) is True
+        assert intersect((0.25, 0.25, 0.75, 4)) is True
 
 if __name__ == '__main__':
     unittest.main()

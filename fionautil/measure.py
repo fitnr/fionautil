@@ -13,6 +13,7 @@ try:
 except ImportError:
     pass
 
+
 def distance(x0, y0, x1, y1, longlat=True):
     '''distance (in m) between two pairs of points'''
     if longlat:
