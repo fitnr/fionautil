@@ -6,7 +6,7 @@
 # Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
 
 try:
-    from shapely.geometry import shape
+    from shapely.geometry import shape as shapelyshape
 except ImportError:
     pass
 
@@ -44,17 +44,23 @@ def togeojson(typ, coordinates, properties=None):
     }
 
 
-def shapify(feature):
+def shape(feature):
     '''Applies shapely.geometry.shape to the geometry part of a feature
     and returns a new feature object with properties intact'''
     try:
         return {
             'properties': feature.get('properties'),
-            'geometry': shape(feature['geometry'])
+            'geometry': shapelyshape(feature['geometry'])
         }
 
     except NameError:
         raise NotImplementedError("shapify requires shapely")
+
+
+def shapify(feature):
+    '''Applies shapely.geometry.shape to the geometry part of a feature
+    and returns a new feature object with properties intact'''
+    return shape(feature)
 
 
 def length(feature):
