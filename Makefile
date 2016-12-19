@@ -8,7 +8,7 @@
 README.rst: README.md
 	- pandoc $< -o $@
 	@touch $@
-	python setup.py check --restructuredtext --strict
+	- python setup.py check --restructuredtext --strict
 
 .PHONY: cov deploy clean
 cov:

@@ -64,6 +64,7 @@ Most of these tools mimic builtin python itertools.
   * azimuth_distance (returns both azimuth and distance between two points)
   * intersect (check if two planar line segments intersect)
   * onsegment (check if a point lines on a line segment)
+  * intersectingbounds (check if two bounding boxes intersect)
 
 ### round
   * geometry - round all coordinates in a geometry to a specified precision

@@ -43,7 +43,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'fiona>=1.6.3,<2.0',
+        'fiona>=1.7.1,<2.0',
     ],
 
     extras_require={
