@@ -66,7 +66,7 @@ def shapify(feature):
 def length(feature):
     '''Returns shapely length'''
     try:
-        geom = shape(feature['geometry'])
+        geom = shapelyshape(feature['geometry'])
         return geom.length
 
     except NameError:
@@ -86,3 +86,12 @@ def compound(feature):
         return True
 
     return False
+
+
+def area(feature):
+    try:
+        geom = shapelyshape(feature['geometry'])
+        return geom.area
+
+    except NameError:
+        raise NotImplementedError("length requires shapely")
