@@ -51,7 +51,7 @@ def first(filename):
     '''Return the first feature of a layer'''
     with fiona.drivers():
         with fiona.open(filename, 'r') as layer:
-            return next(layer)
+            return next(iter(layer))
 
 
 def fiter(filename):
