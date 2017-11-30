@@ -6,6 +6,7 @@
 # http://http://opensource.org/licenses/GPL-3.0
 # Copyright (c) 2015-6, Neil Freeman <contact@fakeisthenewreal.org>
 
+from . import coords
 from . import measure
 from .round import geometry as roundgeometry
 
@@ -169,3 +170,8 @@ def countsegments(geometry):
 
     else:
         return sum(len(ring) - 1 for ring in exploderings(geometry))
+
+
+def bounds(geometry):
+    a, b, c, d = list(zip(*[coords.bounds(ring) for ring in exploderings(geometry)]))
+    return min(a), min(b), max(c), max(d)

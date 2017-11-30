@@ -40,7 +40,7 @@ def roundpolyring(polyring, precision=None):
 
 def centerbounds(bounds):
     '''Returns the center of a bounding box.'''
-    return (bounds[2] - bounds[0]) / 2, (bounds[3] - bounds[1]) / 2
+    return bounds[0] + (bounds[2] - bounds[0]) / 2, bounds[1] + (bounds[3] - bounds[1]) / 2
 
 
 def cornerbounds(bounds):
