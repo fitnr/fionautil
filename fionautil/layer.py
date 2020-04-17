@@ -21,46 +21,52 @@ from . import drivers
 
 def meta(filename):
     '''Return crs and schema for a layer'''
-    with fiona.open(filename, "r") as layer:
-        return layer.meta
+    with fiona.Env():
+        with fiona.open(filename, "r") as layer:
+            return layer.meta
 
 
 def meta_complete(filename):
     '''Return crs and schema for a layer, as well as additional metadata.'''
-    with fiona.open(filename, "r") as layer:
-        m = {
-            'bounds': layer.bounds,
-            'path': layer.path,
-            'name': layer.name,
-            'encoding': layer.encoding
-        }
-        m.update(layer.meta)
-        return m
+    with fiona.Env():
+        with fiona.open(filename, "r") as layer:
+            m = {
+                'bounds': layer.bounds,
+                'path': layer.path,
+                'name': layer.name,
+                'encoding': layer.encoding
+            }
+            m.update(layer.meta)
+            return m
 
 
 def bounds(filename):
     '''Shortcut for returning bounds of a layer (minx, miny, maxx, maxy)'''
-    with fiona.open(filename, 'r') as layer:
-        return layer.bounds
+    with fiona.Env():
+        with fiona.open(filename, 'r') as layer:
+            return layer.bounds
 
 
 def first(filename):
     '''Return the first feature of a layer'''
-    with fiona.open(filename, 'r') as layer:
-        return next(iter(layer))
+    with fiona.Env():
+        with fiona.open(filename, 'r') as layer:
+            return next(iter(layer))
 
 
 def fiter(filename):
-    with fiona.open(filename, "r") as layer:
-        for feature in layer:
-            yield feature
+    with fiona.Env():
+        with fiona.open(filename, "r") as layer:
+            for feature in layer:
+                yield feature
 
 
 def _fionaiter(iterfunc):
     def _iter(func, filename, *args, **kwargs):
-        with fiona.open(filename, "r") as layer:
-            for feature in iterfunc(func, layer, *args, **kwargs):
-                yield feature
+        with fiona.Env():
+            with fiona.open(filename, "r") as layer:
+                for feature in iterfunc(func, layer, *args, **kwargs):
+                    yield feature
     return _iter
 
 
@@ -82,16 +88,18 @@ def fmap(func, layer, *args, **kwargs):
 
 def freduce(func, filename, initializer=None):
     '''Reduce features of a layer to a single value'''
-    with fiona.open(filename, "r") as layer:
-        return reduce(func, layer, initializer)
+    with fiona.Env():
+        with fiona.open(filename, "r") as layer:
+            return reduce(func, layer, initializer)
 
 
 def fchain(*filenames):
     '''Reduce features of a layer to a single value'''
-    for filename in itertools.chain(filenames):
-        with fiona.open(filename, "r") as layer:
-            for feature in layer:
-                yield feature
+    with fiona.Env():
+        for filename in itertools.chain(filenames):
+            with fiona.open(filename, "r") as layer:
+                for feature in layer:
+                    yield feature
 
 
 def fslice(filename, start, stop=None, step=None):
@@ -104,15 +112,15 @@ def fslice(filename, start, stop=None, step=None):
         nexti = next(it)
     except StopIteration:
         return
-
-    with fiona.open(filename, "r") as layer:
-        for i, element in enumerate(layer):
-            if i == nexti:
-                yield element
-                try:
-                    nexti = next(it)
-                except StopIteration:
-                    return
+    with fiona.Env():
+        with fiona.open(filename, "r") as layer:
+            for i, element in enumerate(layer):
+                if i == nexti:
+                    yield element
+                    try:
+                        nexti = next(it)
+                    except StopIteration:
+                        return
 
 def fzip(*filenames):
     try:
@@ -133,17 +141,17 @@ def shapes(filename, crs=None):
         shapelyshape
     except NameError:
         raise NotImplementedError("length require shapely")
+    with fiona.Env():
+        with fiona.open(filename, 'r') as layer:
+            if crs is not None:
+                def _geom(feature):
+                    return fiona.transform.transform_geom(layer.crs, crs, feature['geometry'])
+            else:
+                def _geom(feature):
+                    return feature['geometry']
 
-    with fiona.open(filename, 'r') as layer:
-        if crs is not None:
-            def _geom(feature):
-                return fiona.transform.transform_geom(layer.crs, crs, feature['geometry'])
-        else:
-            def _geom(feature):
-                return feature['geometry']
-
-        for feature in layer:
-            yield shapelyshape(_geom(feature))
+            for feature in layer:
+                yield shapelyshape(_geom(feature))
 
 
 def length(filename, crs=None):
@@ -173,30 +181,31 @@ def dissolve(sourcefile, sinkfile, key, unsplit=None):
     except NameError:
         raise NotImplementedError("dissolve require shapely")
 
-    with fiona.open(sourcefile) as source:
-        schema = source.schema
-        schema['properties'] = {key: source.schema['properties'][key]}
+    with fiona.Env():
+        with fiona.open(sourcefile) as source:
+            schema = source.schema
+            schema['properties'] = {key: source.schema['properties'][key]}
 
-        with fiona.open(sinkfile, 'w', crs=source.crs, schema=schema, driver=source.driver) as sink:
+            with fiona.open(sinkfile, 'w', crs=source.crs, schema=schema, driver=source.driver) as sink:
 
-            gotkeys = dict()
+                gotkeys = dict()
 
-            for _, feat in source.items():
-                fkey = feat['properties'][key]
-                fshape = shapelyshape(feat['geometry'])
+                for _, feat in source.items():
+                    fkey = feat['properties'][key]
+                    fshape = shapelyshape(feat['geometry'])
 
-                if fkey in gotkeys:
-                    gotkeys[fkey][0] = gotkeys[fkey][0].union(fshape)
-                else:
-                    gotkeys[fkey] = [fshape]
+                    if fkey in gotkeys:
+                        gotkeys[fkey][0] = gotkeys[fkey][0].union(fshape)
+                    else:
+                        gotkeys[fkey] = [fshape]
 
-            for shapelist in gotkeys.values():
-                if unsplit:
-                    for s in disjointed(shapelist):
-                        sink.write(s)
+                for shapelist in gotkeys.values():
+                    if unsplit:
+                        for s in disjointed(shapelist):
+                            sink.write(s)
 
-                else:
-                    sink.write(shapelist[0])
+                    else:
+                        sink.write(shapelist[0])
 
 
 def create(output, geometries, properties=None, crs=None, driver=None):
@@ -218,11 +227,12 @@ def create(output, geometries, properties=None, crs=None, driver=None):
         schema['properties'] = {'id': 'int'}
         properties = [{'id': x} for x in range(len(geometries))]
 
-    with fiona.open(output, 'w', driver=driver, crs=crs, schema=schema) as f:
-        for geom, props in zip(geometries, properties):
-            try:
-                feature = {'properties': props, 'geometry': mapping(geom)}
-            except AttributeError:
-                feature = {'properties': props, 'geometry': geom}
+    with fiona.Env():
+        with fiona.open(output, 'w', driver=driver, crs=crs, schema=schema) as f:
+            for geom, props in zip(geometries, properties):
+                try:
+                    feature = {'properties': props, 'geometry': mapping(geom)}
+                except AttributeError:
+                    feature = {'properties': props, 'geometry': geom}
 
-            f.write(feature)
+                f.write(feature)
